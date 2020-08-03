@@ -1,0 +1,5 @@
+--reporter=plain
+--color
+--reporter=plain,output=/Users/jinwoobae/Desktop/DID_project/demo/DID-OIDC-Capstone/build/reports/ktlint/ktlintTestSourceSetFormat.txt
+-F
+src/test/kotlin/com/example/demo/DemoApplicationTests.kt
