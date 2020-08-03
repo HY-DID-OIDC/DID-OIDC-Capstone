@@ -18,11 +18,13 @@ repositories {
 
 dependencies {
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+    implementation("org.springframework.boot:spring-boot-starter-mustache")
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
     developmentOnly("org.springframework.boot:spring-boot-devtools")
+    runtimeOnly("com.h2database:h2")
     testImplementation("org.springframework.boot:spring-boot-starter-test") {
         exclude(group = "org.junit.vintage", module = "junit-vintage-engine")
     }
@@ -38,3 +40,14 @@ tasks.withType<KotlinCompile> {
         jvmTarget = "1.8"
     }
 }
+
+buildscript {
+    repositories {
+        maven("https://plugins.gradle.org/m2/")
+    }
+    dependencies {
+        classpath("org.jlleitschuh.gradle:ktlint-gradle:9.3.0")
+    }
+}
+
+apply(plugin = "org.jlleitschuh.gradle.ktlint")
