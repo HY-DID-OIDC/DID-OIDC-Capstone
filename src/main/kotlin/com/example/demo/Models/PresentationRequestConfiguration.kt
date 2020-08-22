@@ -15,11 +15,3 @@ data class PresentationRequestConfiguration(
     @JsonProperty("requested_predicates")
     var requestedPredicates: MutableList<RequestedPredicate> = MutableList<RequestedPredicate>()
 )
-
-// 테스트 코드(requestedAttributes와 requestedPredicates는 미구현으로 주석 처리 후 테스트)
-fun main(args: Array<String>) {
-    var test: PresentationRequestConfiguration = PresentationRequestConfiguration("basic", "v1.0")
-    var result: String = ObjectMapper().writeValueAsString(test)
-
-    println(result)
-}
