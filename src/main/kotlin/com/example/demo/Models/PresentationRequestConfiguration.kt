@@ -1,10 +1,7 @@
 package com.example.demo.models
 
-import com.example.demo.DemoApplication
 import com.fasterxml.jackson.annotation.JsonAutoDetect
 import com.fasterxml.jackson.annotation.JsonProperty
-import com.fasterxml.jackson.databind.ObjectMapper
-import org.springframework.boot.runApplication
 
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
 data class PresentationRequestConfiguration(
