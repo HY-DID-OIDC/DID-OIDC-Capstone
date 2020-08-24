@@ -1,5 +1,5 @@
 import com.fasterxml.jackson.annotation.JsonProperty
-import java.util.*
+import java.util.Dictionary
 
 data class PresentationAttachment(
     @JsonProperty("@id") var Id: String,
