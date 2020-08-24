@@ -1,4 +1,4 @@
-package com.example.demo.models
+package com.example.demo.Models
 
 import com.example.demo.Models.AttributeFilter
 import com.fasterxml.jackson.annotation.JsonAutoDetect
