@@ -1,6 +1,5 @@
 package com.example.demo.Models
 
-import com.example.demo.models.PresentationAttributeInfo
 import com.fasterxml.jackson.annotation.JsonInclude
 import com.fasterxml.jackson.annotation.JsonProperty
 
