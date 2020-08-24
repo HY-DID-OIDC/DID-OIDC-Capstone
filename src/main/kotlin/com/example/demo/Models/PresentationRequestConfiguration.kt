@@ -8,7 +8,7 @@ data class PresentationRequestConfiguration(
     var name: String,
     var version: String,
     @JsonProperty("requested_attributes")
-    var requestedAttributes: MutableList<RequestedAttribute> = MutableList<RequestedAttribute>(),
+    var requestedAttributes: MutableList<RequestedAttribute> = mutableListOf(),
     @JsonProperty("requested_predicates")
-    var requestedPredicates: MutableList<RequestedPredicate> = MutableList<RequestedPredicate>()
+    var requestedPredicates: MutableList<RequestedPredicate> = mutableListOf()
 )
