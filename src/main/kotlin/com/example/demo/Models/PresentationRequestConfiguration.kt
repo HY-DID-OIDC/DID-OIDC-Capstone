@@ -1,4 +1,4 @@
-package com.example.demo.models
+package com.example.demo.Models
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect
 import com.fasterxml.jackson.annotation.JsonProperty
