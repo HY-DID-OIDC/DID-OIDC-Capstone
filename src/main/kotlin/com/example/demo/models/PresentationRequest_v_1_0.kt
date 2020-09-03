@@ -1,4 +1,4 @@
-package com.example.demo.Models
+package com.example.demo.models
 
 data class PresentationRequest_v_1_0(
     var name: String,

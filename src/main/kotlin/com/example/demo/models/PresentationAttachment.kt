@@ -1,3 +1,5 @@
+package com.example.demo.models
+
 import com.fasterxml.jackson.annotation.JsonProperty
 import java.util.Dictionary
 
@@ -8,4 +10,3 @@ data class PresentationAttachment(
 
     @JsonProperty("data") var Data: Dictionary<String, String>
 )
-

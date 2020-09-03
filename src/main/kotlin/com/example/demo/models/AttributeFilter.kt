@@ -1,7 +1,6 @@
-package com.example.demo.Models
+package com.example.demo.models
 import com.fasterxml.jackson.annotation.JsonInclude
 import com.fasterxml.jackson.annotation.JsonProperty
-
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 data class AttributeFilter(
@@ -17,6 +16,3 @@ data class AttributeFilter(
 
     @JsonProperty("cred_def_id") var CredentialDefinitionId: String?
 )
-
-
-
