@@ -7,8 +7,10 @@ import com.fasterxml.jackson.annotation.JsonProperty
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
 data class PresentationAttributeInfo(
     var name: String,
+
     @JsonInclude(JsonInclude.Include.NON_NULL)
     var restrictions: MutableList<AttributeFilter>,
+
     @JsonInclude(JsonInclude.Include.NON_NULL)
     @JsonProperty("non_revoked")
     var nonRevoked: RevocationInterval

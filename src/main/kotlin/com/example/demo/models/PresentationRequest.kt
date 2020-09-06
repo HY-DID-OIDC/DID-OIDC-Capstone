@@ -5,7 +5,9 @@ import com.fasterxml.jackson.annotation.JsonProperty
 
 data class PresentationRequest(
     var name: String,
+
     var version: String,
+
     var nonce: String,
 
     @JsonProperty("requested_attributes")

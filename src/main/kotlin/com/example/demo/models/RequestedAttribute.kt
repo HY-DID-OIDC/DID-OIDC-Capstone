@@ -9,5 +9,6 @@ data class RequestedAttribute(
 
     var label: String,
 
-    @JsonProperty("restrictions") var Restrictions: List<AttributeFilter>
+    @JsonProperty("restrictions")
+    var Restrictions: List<AttributeFilter>
 )
