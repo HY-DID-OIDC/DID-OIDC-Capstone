@@ -1,4 +1,4 @@
-package com.example.demo.models
+package com.capstone.didauthoidc.models
 
 data class ServiceDecorator(
     var recipientKeys: MutableList<String>,
