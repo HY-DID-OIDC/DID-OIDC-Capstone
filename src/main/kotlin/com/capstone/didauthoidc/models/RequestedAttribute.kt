@@ -1,4 +1,4 @@
-package com.example.demo.models
+package com.capstone.didauthoidc.models
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect
 import com.fasterxml.jackson.annotation.JsonProperty

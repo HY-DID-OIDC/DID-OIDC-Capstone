@@ -1,4 +1,4 @@
-package com.example.demo.models
+package com.capstone.didauthoidc.models
 
 data class PresentationRequest_v_1_0(
     var name: String,
