@@ -1,4 +1,4 @@
-package com.capstone.didauthoidc.acapyy
+package com.capstone.didauthoidc.acapy
 
 import com.capstone.didauthoidc.acapy.models.WalletDidPublicResponse
 import com.capstone.didauthoidc.acapy.models.WalletPublicDid
