@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang = "en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Auth Server</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+          crossorigin="anonymous" />
+</head>
+<body>
+<script src="https://code.jquery.com/jquery-3.2.1.min.js">
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+        crossorigin="anonymous">
+</script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+        crossorigin="anonymous">
+</script>
+<div class="container body-content">
+
+    <div id="dependencies">
+        <!-- Load required Bootstrap and BootstrapVue CSS -->
+        <link
+            type="text/css"
+            rel="stylesheet"
+            href="//unpkg.com/bootstrap/dist/css/bootstrap.min.css"
+        />
+        <link
+            type="text/css"
+            rel="stylesheet"
+            href="//unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.min.css"
+        />
+
+        <!-- Load polyfills to support older browsers -->
+        <script
+            src="//polyfill.io/v3/polyfill.min.js?features=es2015%2CIntersectionObserver"
+            crossorigin="anonymous"
+        ></script>
+
+        <!-- Load Vue followed by BootstrapVue -->
+        <script src="//unpkg.com/vue@latest/dist/vue.min.js"></script>
+        <script src="//unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.min.js"></script>
+
+        <!-- Load the following for BootstrapVueIcons support -->
+        <script src="//unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue-icons.min.js"></script>
+
+        <!-- qrcode.vue -->
+        <script src="//unpkg.com/qrcode.vue@1.7.0/dist/qrcode.vue.js"></script>
+
+        <!-- axios -->
+        <script src="//unpkg.com/axios/dist/axios.min.js"></script>
+
+    </div>
+
+    <div id="app">
+
+        <b-container fluid="md" class="py-3">
+
+            <b-card :body-class="cardBodyClass" style="min-width: 400px;">
+                <b-card-title>
+                    <b-icon icon="shield-shaded" variant="primary"></b-icon>
+                    Authentication Required
+                    <b-icon icon="shield-shaded"  variant="primary"></b-icon>
+                </b-card-title>
+                <b-card-text>Please provide your Verifiable Credentials</b-card-text>
+
+                <div class="my-5">
+                    <qrcode-vue :value="qrUri" :size="qrWidth" level="H"></qrcode-vue>
+                </div>
+                <b-button :href="btnUri" variant="outline-primary">
+                    <b-icon icon="box-arrow-up-right"></b-icon>
+                    Open in a Trusted Digital Wallet
+                </b-button>
+            </b-card>
+
+        </b-container>
+
+    </div>
+
+    <script type="text/javascript" th:inline="javascript">
+        const presReq = [[${presreq}]];
+        var app = new Vue( {
+            components: {
+                QrcodeVue,
+            },
+            delimiters: ["[" +
+            "[", "]" +
+            "]"],
+            el: "#app",
+            data: {
+                qrUri: "@Model.Challenge",
+                qrWidth: 300,
+                btnUri: `didcomm://launch?d_m=${btoa(JSON.stringify(presReq))}`,
+                cardBodyClass: ['mx-auto', 'text-center'],
+                pollInterval: "@Model.Interval",
+                pollUrl: "@Model.PollUrl",
+                resolutionUrl: "@Model.ResolutionUrl"
+            },
+            mounted: function () {
+                this.$nextTick(function () {
+                    // start polling after view has rendered
+                    this.poll();
+                })
+            },
+            methods: {
+                poll: function () {
+                    const retryInterceptor = axios.interceptors.response.use(
+                        response => {
+                            window.location.replace(this.resolutionUrl);
+                        },
+                        async error => {
+                            await this.sleep(this.pollInterval);
+                            return axios.request(error.config);
+                        }
+                    );
+                    axios.get(this.pollUrl).finally(() => {
+                        axios.interceptors.response.eject(retryInterceptor);
+                    });
+                },
+                sleep: function (ms) {
+                    return new Promise(resolve => setTimeout(resolve, ms));
+                }
+            },
+        });
+    </script>
+</div>
