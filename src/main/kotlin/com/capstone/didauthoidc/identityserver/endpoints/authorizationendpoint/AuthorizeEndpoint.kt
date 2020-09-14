@@ -8,11 +8,6 @@ import org.springframework.web.bind.annotation.RequestParam
 import com.capstone.didauthoidc.acapy.ACAPYClient
 import com.capstone.didauthoidc.acapy.models.CreatePresentationResponse
 import com.capstone.didauthoidc.acapy.models.WalletPublicDid
-import com.capstone.didauthoidc.models.RequestedAttribute
-import com.capstone.didauthoidc.models.AttributeFilter
-import com.capstone.didauthoidc.models.RequestedPredicate
-import com.capstone.didauthoidc.models.PresentationConfiguration
-import com.capstone.didauthoidc.models.PresentationRequestConfiguration
 import com.capstone.didauthoidc.models.PresentationRequestMessage
 import com.capstone.didauthoidc.models.ServiceDecorator
 import com.capstone.didauthoidc.services.UrlShortenerService
