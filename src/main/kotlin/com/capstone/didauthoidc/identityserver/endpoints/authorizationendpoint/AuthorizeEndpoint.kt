@@ -14,6 +14,7 @@ import com.capstone.didauthoidc.services.UrlShortenerService
 import com.capstone.didauthoidc.utils.OurJacksonObjectMapper
 import com.capstone.didauthoidc.utils.PresentationRequestUtils
 import com.fasterxml.jackson.module.kotlin.readValue
+import java.util.Base64
 import kotlin.NoSuchElementException
 
 @RestController
@@ -63,8 +64,10 @@ class AuthorizeEndpoint {
         }
 
         var aca = ACAPYClient()
-//        var acapyPublicDid: WalletPublicDid = aca.WalletDidPublic()
-        var acapyPublicDid = WalletPublicDid("Th7MpTaRZVRYnPiabds81Y", "FYmoFw55GeQH7SRFa37dkx1d2dZ3zUF8ckg7wmL7ofN4", true)
+        var acapyPublicDid: WalletPublicDid = aca.WalletDidPublic()
+
+        // 도커에 acapy를 안띄웠을경우를 대비한 디버깅용 코드
+//        var acapyPublicDid = WalletPublicDid("Th7MpTaRZVRYnPiabds81Y", "FYmoFw55GeQH7SRFa37dkx1d2dZ3zUF8ckg7wmL7ofN4", true)
 
         //PresentationConfiguration 객체를 원래 preq_conf_id를 파라미터로 줘서 파라미터와 매핑되는 객체를 디비에서 가지고 와야하지만 아직 DB설계가 완벽히 되지않았으므로 객체를 직접 생성한다.
         var requested_attributes : MutableList<RequestedAttribute> = arrayListOf()
@@ -143,8 +146,9 @@ class AuthorizeEndpoint {
         presentationRequest = buildPresentationRequest(response, acapyPublicDid, aca)
         presentationRequestId = response.PresentationExchangeId
 
-        // 다음은 shortUrl을 만들자. 일반url은 지금은 하드코딩 하겠다.
-        val url: String = "http://localhost:5000?m=eyJAaWQiOiI2YWUyMWZlNy1mM2UwLTRmZmUtOThhOC1hOTcxMDU2YWM2NjIiLCJAdHlwZSI6ImRpZDpzb3Y6QnpDYnNOWWhNcmpIaXFaRFRVQVNIZztzcGVjL3ByZXNlbnQtcHJvb2YvMS4wL3JlcXVlc3QtcHJlc2VudGF0aW9uIiwicmVxdWVzdF9wcmVzZW50YXRpb25zfmF0dGFjaCI6W3siQGlkIjoibGliaW5keS1yZXF1ZXN0LXByZXNlbnRhdGlvbi0wIiwibWltZS10eXBlIjoiYXBwbGljYXRpb24vanNvbiIsImRhdGEiOnsiYmFzZTY0IjoiZXlKdVlXMWxJam9pUW1GemFXTWdVSEp2YjJZaUxDSjJaWEp6YVc5dUlqb2lNUzR3SWl3aWJtOXVZMlVpT2lJek5qSTNORGd5TlRRek9EUTFOemd5TVRjeE56RTJOeUlzSW5KbGNYVmxjM1JsWkY5aGRIUnlhV0oxZEdWeklqcDdJbVl3WlRZMU5EUmtMVEJsWm1RdE5HSTVZUzA1T1RBMkxUaGhPVEkxTldJd01EazJPQ0k2ZXlKdVlXMWxJam9pWlcxaGFXd2lMQ0p5WlhOMGNtbGpkR2x2Ym5NaU9sdGRmU3dpWWpCaU1qbG1OVGN0WkRKa05TMDBZalpsTFdJelpqY3RObUUzWlRFek1qSm1OalV6SWpwN0ltNWhiV1VpT2lKbWFYSnpkRjl1WVcxbElpd2ljbVZ6ZEhKcFkzUnBiMjV6SWpwYlhYMHNJbUkxWkdJME1UVXdMVEpsWldJdE5HSmhNQzA0WmpnM0xXWmhaVEJsTTJSbE5UUTROaUk2ZXlKdVlXMWxJam9pYkdGemRGOXVZVzFsSWl3aWNtVnpkSEpwWTNScGIyNXpJanBiWFgxOUxDSnlaWEYxWlhOMFpXUmZjSEpsWkdsallYUmxjeUk2ZTMxOSJ9fV0sImNvbW1lbnQiOm51bGwsIn5zZXJ2aWNlIjp7InJlY2lwaWVudEtleXMiOlsiRlltb0Z3NTVHZVFIN1NSRmEzN2RreDFkMmRaM3pVRjhja2c3d21MN29mTjQiXSwicm91dGluZ0tleXMiOm51bGwsInNlcnZpY2VFbmRwb2ludCI6Imh0dHA6Ly8xOTIuMTY4LjY1LjM6NTY3OSJ9fQ=="
+        // 다음으로 url과 shortUrl을 만들자.
+        val presentationRequestAsStringAsBase64 = Base64.getEncoder().encodeToString(OurJacksonObjectMapper.getMapper().writeValueAsString(presentationRequest).toByteArray())
+        val url = "http://localhost:5000?m=$presentationRequestAsStringAsBase64"
         var shortUrl: String = urlShortenerService.createShortUrl(url)
 
         // 다음은 AuthSession 데이터 클래스를 이용해 세션을 DB에 저장해야 한다. but 지금은 세션처리를 안하겠다.

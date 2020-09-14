@@ -12,7 +12,7 @@ data class PresentationRequestMessage(
     @JsonProperty("request_presentations~attach")
     var request: MutableList<PresentationAttachment> = mutableListOf(),
 
-    var comment: String? = "",
+    var comment: String? = null,
 
     @JsonProperty("~service")
     var service: ServiceDecorator = ServiceDecorator()
