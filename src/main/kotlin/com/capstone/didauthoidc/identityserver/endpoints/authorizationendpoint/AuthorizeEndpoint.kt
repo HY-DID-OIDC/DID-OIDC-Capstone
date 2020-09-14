@@ -5,7 +5,6 @@ import org.springframework.util.MultiValueMap
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestMethod
 import org.springframework.web.bind.annotation.RequestParam
-import org.springframework.web.bind.annotation.RestController
 import com.capstone.didauthoidc.acapy.ACAPYClient
 import com.capstone.didauthoidc.acapy.models.CreatePresentationResponse
 import com.capstone.didauthoidc.acapy.models.WalletPublicDid
@@ -20,10 +19,12 @@ import com.capstone.didauthoidc.services.UrlShortenerService
 import com.capstone.didauthoidc.utils.OurJacksonObjectMapper
 import com.capstone.didauthoidc.utils.PresentationRequestUtils
 import com.fasterxml.jackson.module.kotlin.readValue
+import org.springframework.stereotype.Controller
+import org.springframework.ui.Model
 import java.util.Base64
 import kotlin.NoSuchElementException
 
-@RestController
+@Controller
 @RequestMapping("/vc/connect/authorize")
 class AuthorizeEndpoint {
 
@@ -34,18 +35,18 @@ class AuthorizeEndpoint {
     // 일반 base64로 인코딩된 presentationRequest를 가지고 있는 url을 더 짧은 url로 바꿔주기 위해 필요한 객체.
     val urlShortenerService = UrlShortenerService()
 
-    @RequestMapping(method = arrayOf(RequestMethod.POST))
-    fun ProcessAsync(@RequestParam param: MultiValueMap<String, String>): String? {
+    @RequestMapping(method = arrayOf(RequestMethod.POST, RequestMethod.GET))
+    fun ProcessAsync(@RequestParam param: MultiValueMap<String, String>, model: Model): String {
 
         val scopes: List<String> = param.getValue("scope")[0].toString().split(" ")
 
-        var check = 0
+        var isVcauthnInScope = 0
 
-        for (i in scopes) {
-            if (i == "vc_authn")
-                check = 1
+        for (scope in scopes) {
+            if (scope == "vc_authn")
+                isVcauthnInScope = 1
         }
-        if (check == 0) {
+        if (isVcauthnInScope == 0) {
             return error("scopes doesn't contain vc_authn")
         }
 
@@ -70,48 +71,11 @@ class AuthorizeEndpoint {
         }
 
         var aca = ACAPYClient()
-        var acapyPublicDid: WalletPublicDid = aca.WalletDidPublic()
+//        var acapyPublicDid: WalletPublicDid = aca.WalletDidPublic()
 
         // 도커에 acapy를 안띄웠을경우를 대비한 디버깅용 코드
-//        var acapyPublicDid = WalletPublicDid("Th7MpTaRZVRYnPiabds81Y", "FYmoFw55GeQH7SRFa37dkx1d2dZ3zUF8ckg7wmL7ofN4", true)
-
-        // PresentationConfiguration 객체를 원래 preq_conf_id를 파라미터로 줘서 파라미터와 매핑되는 객체를 디비에서 가지고 와야하지만 아직 DB설계가 완벽히 되지않았으므로 객체를 직접 생성한다.
-        var requested_attributes: MutableList<RequestedAttribute> = arrayListOf()
-
-        var attributeFilter1: MutableList<AttributeFilter> = arrayListOf()
-        var attributeFilter2: MutableList<AttributeFilter> = arrayListOf()
-        var attributeFilter3: MutableList<AttributeFilter> = arrayListOf()
-
-        // attributefilter를 붙여서 제대로 동작하는지 확인하는 부분.
-        var attribute1 =
-            AttributeFilter("unknown", "47xuakdhwjh29173", "DID", "1.0", "9592834sksjfhef17", "12819vfudhf27")
-
-        attributeFilter1.add(0, attribute1)
-
-        var requested_attributes1 = RequestedAttribute("email", null, attributeFilter2)
-
-        var requested_attributes2 = RequestedAttribute("first_name", null, attributeFilter3)
-
-        var requested_attributes3 = RequestedAttribute("last_name", null, attributeFilter1)
-
-        requested_attributes.add(0, requested_attributes1)
-        requested_attributes.add(1, requested_attributes2)
-        requested_attributes.add(2, requested_attributes3)
-
-        var requestedPredicates1: MutableList<RequestedPredicate> = arrayListOf()
-
-        var presentationrequestconf =
-            PresentationRequestConfiguration("Basic Proof", "1.0", requested_attributes, requestedPredicates1)
-
-        var presentconf = PresentationConfiguration("test-request-config", "email", null, presentationrequestconf)
-
-        // 위에서 만든 PresentationConfiguration 클래스를 JsonString으로 변환하는 코드
-        var jsonStr =
-            OurJacksonObjectMapper.getMapper().writerWithDefaultPrettyPrinter().writeValueAsString(presentconf)
-
-        // JsonString을 다시 PresentationConfiguration data class로 변환하는 코드이다. debug
-        var jsonStr2: PresentationConfiguration =
-            OurJacksonObjectMapper.getMapper().readValue<PresentationConfiguration>(jsonStr)
+        var acapyPublicDid =
+            WalletPublicDid("Th7MpTaRZVRYnPiabds81Y", "FYmoFw55GeQH7SRFa37dkx1d2dZ3zUF8ckg7wmL7ofN4", true)
 
         // 다음은 PresentationRequestMessage 객체를 생성해야 한다.
         var presentationRequest: PresentationRequestMessage
@@ -151,23 +115,35 @@ class AuthorizeEndpoint {
             "        }\n" +
             "    }\n" +
             "}"
+
         // 방금 위에서 선언한 responseAsString을 역직렬화하여 변수 response에 저장한다.
         var response: CreatePresentationResponse = OurJacksonObjectMapper.getMapper().readValue(responseAsString)
         presentationRequest = buildPresentationRequest(response, acapyPublicDid, aca)
         presentationRequestId = response.PresentationExchangeId
 
         // 다음으로 url과 shortUrl을 만들자.
+        val presentationRequestAsString = OurJacksonObjectMapper.getMapper().writeValueAsString(presentationRequest)
+
         val presentationRequestAsStringAsBase64 = Base64.getEncoder()
-            .encodeToString(OurJacksonObjectMapper.getMapper().writeValueAsString(presentationRequest).toByteArray())
+            .encodeToString(presentationRequestAsString.toByteArray())
+
         val url = "http://localhost:5000?m=$presentationRequestAsStringAsBase64"
         var shortUrl: String = urlShortenerService.createShortUrl(url)
 
-        // 다음은 AuthSession 데이터 클래스를 이용해 세션을 DB에 저장해야 한다. but 지금은 세션처리를 안하겠다.
+        // TODO : 다음은 AuthSession 데이터 클래스를 이용해 세션을 DB에 저장해야 한다. but 지금은 세션처리를 안하겠다.
 
-        // 리턴도 원래는 AuthorizationViewModel을 가진 AuthorizationEndpointResult여야 하지만 지금은 처리가 잘 끝났다는 뜻으로 그냥 스트링을 리턴하겠다.
-        return "Successfully AuthorizeEndpoint was exit"
+        // 리턴하는것은 thymeleaf로 구현된 qr코드 화면이다.
+        return AuthorizationEndpointResult(
+            AuthorizationViewModel(
+                shortUrl,
+                "http://localhost:5000/vc/connect/poll?pid=$presentationRequestId",
+                "http://localhost:5000/vc/connect/callback?pid=$presentationRequestId",
+                presentationRequestAsString
+            )
+        ).ExecuteAsnc(model)
     }
 
+    // 이 메소드는 CreatePresentationResponse 객체로 부터 필요한 정보를 파싱해 PresentationRequestMessage 객체 형태로 만들어준다.
     fun buildPresentationRequest(
         response: CreatePresentationResponse,
         acapyPublicDid: WalletPublicDid,
@@ -175,10 +151,12 @@ class AuthorizeEndpoint {
     ): PresentationRequestMessage {
 
         var request = PresentationRequestMessage()
+
         request.id = response.ThreadId
         request.request = PresentationRequestUtils.generatePresentationAttachments(response.PresentationRequest)
 
         var service = ServiceDecorator()
+
         service.recipientKeys.add(acapyPublicDid.Verkey)
         service.serviceEndpoint = aca.GetAgentUrl()!!
 
