@@ -1,5 +1,6 @@
 package com.capstone.didauthoidc.acapy.models
 
+import com.capstone.didauthoidc.models.PresentationRequest
 import com.fasterxml.jackson.annotation.JsonProperty
 
 data class CreatePresentationResponse(
@@ -10,5 +11,5 @@ data class CreatePresentationResponse(
     var PresentationExchangeId: String,
 
     @JsonProperty("presentation_request")
-    var PresentationRequest: String
+    var PresentationRequest: PresentationRequest
 )

@@ -19,5 +19,5 @@ data class PresentationRequest(
 
     @JsonProperty("non_revoked")
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    var nonRevoked: RevocationInterval
+    var nonRevoked: RevocationInterval?
 )

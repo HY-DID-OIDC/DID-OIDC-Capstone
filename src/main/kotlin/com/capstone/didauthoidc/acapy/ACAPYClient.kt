@@ -2,7 +2,7 @@ package com.capstone.didauthoidc.acapy
 
 import com.capstone.didauthoidc.acapy.models.WalletDidPublicResponse
 import com.capstone.didauthoidc.acapy.models.WalletPublicDid
-import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import com.capstone.didauthoidc.utils.OurJacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -24,6 +24,7 @@ interface IACAPYClient {
 class ACAPYClient : IACAPYClient {
 
     private var log: Logger = LoggerFactory.getLogger(Controller::class.java)
+
     // configuration 구현 전 하드코딩
     private val _adminUrl: String = "http://localhost:5678"
 
@@ -40,7 +41,7 @@ class ACAPYClient : IACAPYClient {
     }
 
     override fun WalletDidPublic(): WalletPublicDid {
-
+      
         val url = URL("http://localhost:5678/wallet/did/public")
 
         val con = url.openConnection() as HttpURLConnection
@@ -62,9 +63,7 @@ class ACAPYClient : IACAPYClient {
         }
 
         val json: String = content.toString()
-
-        val mapper = jacksonObjectMapper()
-
+        val mapper = OurJacksonObjectMapper.getMapper()
         var PublicDid: WalletDidPublicResponse = mapper.readValue<WalletDidPublicResponse>(json)
 
         `in`.close()
