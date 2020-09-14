@@ -2,8 +2,10 @@ package com.capstone.didauthoidc.models
 
 import com.fasterxml.jackson.annotation.JsonInclude
 import com.fasterxml.jackson.annotation.JsonProperty
+import com.fasterxml.jackson.annotation.JsonPropertyOrder
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonPropertyOrder("SchemaId", "SchemaIssuerDid", "SchemaName", "SchemaVersion", "IssuerDid","CredentialDefinitionId")
 data class AttributeFilter(
     @JsonProperty("schema_id")
     var SchemaId: String?,

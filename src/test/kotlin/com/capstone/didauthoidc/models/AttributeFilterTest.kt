@@ -1,6 +1,7 @@
 package com.capstone.didauthoidc.models
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect
+import com.fasterxml.jackson.annotation.PropertyAccessor
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -12,25 +13,22 @@ class AttributeFilterTest {
         val attributeFilter = AttributeFilter("this_is_SchemaId", "this_is_SchemaIssuerDid", "this_is_SchemaName", "this_is_SchemaVersion", "this_is_IssuerDid", "this_is_CredentialDefinitionId")
 
         val mapper = jacksonObjectMapper()
-        mapper.setVisibilityChecker(mapper.getSerializationConfig().getDefaultVisibilityChecker()
-            .withFieldVisibility(JsonAutoDetect.Visibility.ANY)
-            .withGetterVisibility(JsonAutoDetect.Visibility.NONE)
-            .withSetterVisibility(JsonAutoDetect.Visibility.NONE)
-            .withCreatorVisibility(JsonAutoDetect.Visibility.NONE));
+        mapper.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.NONE)
+        mapper.setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY)
 
         val serialized = mapper.writeValueAsString(attributeFilter).trim()
 
-        println(serialized)
-
-        val json = """{"credentialDefinitionId":"this_is_CredentialDefinitionId","issuerDid":"this_is_IssuerDid","schemaId":"this_is_SchemaId","schemaIssuerDid":"this_is_SchemaIssuerDid","schemaName":"this_is_SchemaName","schemaVersion":"this_is_SchemaVersion"}""".trim()
+        val json = """{"schema_id":"this_is_SchemaId","schema_issuer_did":"this_is_SchemaIssuerDid","schema_name":"this_is_SchemaName","schema_version":"this_is_SchemaVersion","issuer_did":"this_is_IssuerDid","cred_def_id":"this_is_CredentialDefinitionId"}""".trim()
 
         assertEquals(serialized, json)
     }
 
     @Test
     fun whenDeserializeAttributeFilter_thenSuccess() {
-        val json = """{"credentialDefinitionId":"this_is_CredentialDefinitionId","issuerDid":"this_is_IssuerDid","schemaId":"this_is_SchemaId","schemaIssuerDid":"this_is_SchemaIssuerDid","schemaName":"this_is_SchemaName","schemaVersion":"this_is_SchemaVersion"}""".trim()
+        val json = """{"schema_id":"this_is_SchemaId","schema_issuer_did":"this_is_SchemaIssuerDid","schema_name":"this_is_SchemaName","schema_version":"this_is_SchemaVersion","issuer_did":"this_is_IssuerDid","cred_def_id":"this_is_CredentialDefinitionId"}""".trim()
         val mapper = jacksonObjectMapper()
+        mapper.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.NONE)
+        mapper.setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY)
 
         val attributeFilter = mapper.readValue<AttributeFilter>(json);
 
