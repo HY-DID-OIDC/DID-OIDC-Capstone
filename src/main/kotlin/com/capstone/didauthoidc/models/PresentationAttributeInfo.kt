@@ -13,5 +13,5 @@ data class PresentationAttributeInfo(
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
     @JsonProperty("non_revoked")
-    var nonRevoked: RevocationInterval
+    var nonRevoked: RevocationInterval?
 )

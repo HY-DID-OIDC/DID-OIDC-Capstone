@@ -15,5 +15,5 @@ data class WalletPublicDid(
     var Verkey: String,
 
     @JsonProperty("public")
-    var Public: String
+    var Public: Boolean
 )

@@ -4,16 +4,16 @@ import com.fasterxml.jackson.annotation.JsonProperty
 
 data class PresentationRequestMessage(
     @JsonProperty("@id")
-    var id: String,
+    var id: String = "",
 
     @JsonProperty("@type")
     var type: String = "did:sov:BzCbsNYhMrjHiqZDTUASHg;spec/present-proof/1.0/request-presentation",
 
     @JsonProperty("request_presentations~attach")
-    var request: MutableList<PresentationAttachment>,
+    var request: MutableList<PresentationAttachment> = mutableListOf(),
 
-    var comment: String,
+    var comment: String? = "",
 
     @JsonProperty("~service")
-    var service: ServiceDecorator
+    var service: ServiceDecorator = ServiceDecorator()
 )

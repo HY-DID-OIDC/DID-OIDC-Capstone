@@ -5,10 +5,10 @@ import com.fasterxml.jackson.annotation.JsonProperty
 
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
 data class RequestedAttribute(
-    var name: String,
+    var name: String?,
 
-    var label: String,
+    var label: String?,
 
     @JsonProperty("restrictions")
-    var Restrictions: List<AttributeFilter>
+    var Restrictions: List<AttributeFilter>?
 )
