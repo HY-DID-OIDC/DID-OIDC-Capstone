@@ -62,7 +62,7 @@ class IdentityConstants {
 
         const val GeneralError: String = "error"
 
-        const val AuthorizationViewName: String = "/Views/Authorize/Authorize.cshtml"
+        const val AuthorizationViewName: String = "/views/Authorize/Authorize.cshtml"
 
         const val ChallengeIdQueryParameterName: String = "pid"
 

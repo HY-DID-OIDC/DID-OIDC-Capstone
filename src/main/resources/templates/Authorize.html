@@ -1,13 +1,13 @@
 <!DOCTYPE html>
-<html lang = "en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>Auth Server</title>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
           integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
-          crossorigin="anonymous" />
+          crossorigin="anonymous"/>
 </head>
 <body>
 <script src="https://code.jquery.com/jquery-3.2.1.min.js">
@@ -64,7 +64,7 @@
                 <b-card-title>
                     <b-icon icon="shield-shaded" variant="primary"></b-icon>
                     Authentication Required
-                    <b-icon icon="shield-shaded"  variant="primary"></b-icon>
+                    <b-icon icon="shield-shaded" variant="primary"></b-icon>
                 </b-card-title>
                 <b-card-text>Please provide your Verifiable Credentials</b-card-text>
 
@@ -83,7 +83,7 @@
 
     <script type="text/javascript" th:inline="javascript">
         const presReq = [[${presreq}]];
-        var app = new Vue( {
+        var app = new Vue({
             components: {
                 QrcodeVue,
             },

@@ -1,4 +1,4 @@
-package com.capstone.didauthoidc.identityserver.endpoints
+package com.capstone.didauthoidc.identityserver.endpoints.authorizationendpoint
 
 import com.capstone.didauthoidc.IdentityConstants
 import org.springframework.beans.factory.annotation.Value
@@ -22,11 +22,10 @@ class AuthorizationViewModel {
 
     constructor(
         @Value("challenge") challenge: String,
-        @Value("pollUrl")pollUrl: String,
+        @Value("pollUrl") pollUrl: String,
         @Value("resolutionUrl") resolutionUrl: String,
         @Value("presentationReqeust") presentationRequest: String
     ) {
-
         this.Challenge = challenge
 
         this.PollUrl = pollUrl

@@ -30,7 +30,7 @@ class ACAPYClient : IACAPYClient {
 
     private val _adminUrlApiKey: String = ""
 
-    private val _agentUrl: String = "http://localhost:5679"
+    private val _agentUrl: String = "http://192.168.65.3:5679"
 
     override fun GetAdminUrl(): String? {
         return _adminUrl
@@ -41,7 +41,7 @@ class ACAPYClient : IACAPYClient {
     }
 
     override fun WalletDidPublic(): WalletPublicDid {
-      
+
         val url = URL("http://localhost:5678/wallet/did/public")
 
         val con = url.openConnection() as HttpURLConnection
