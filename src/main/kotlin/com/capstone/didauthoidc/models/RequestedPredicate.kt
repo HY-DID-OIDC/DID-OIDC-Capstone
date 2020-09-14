@@ -9,7 +9,7 @@ data class RequestedPredicate(
 
     var label: String,
 
-    var Restrictions: List<AttributeFilter>,
+    var Restrictions: MutableList<AttributeFilter>,
 
     @JsonProperty("p_value") var PValue: String,
 
