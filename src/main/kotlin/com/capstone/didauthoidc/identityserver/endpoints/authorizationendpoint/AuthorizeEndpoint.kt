@@ -9,7 +9,13 @@ import org.springframework.web.bind.annotation.RestController
 import com.capstone.didauthoidc.acapy.ACAPYClient
 import com.capstone.didauthoidc.acapy.models.CreatePresentationResponse
 import com.capstone.didauthoidc.acapy.models.WalletPublicDid
-import com.capstone.didauthoidc.models.*
+import com.capstone.didauthoidc.models.RequestedAttribute
+import com.capstone.didauthoidc.models.AttributeFilter
+import com.capstone.didauthoidc.models.RequestedPredicate
+import com.capstone.didauthoidc.models.PresentationConfiguration
+import com.capstone.didauthoidc.models.PresentationRequestConfiguration
+import com.capstone.didauthoidc.models.PresentationRequestMessage
+import com.capstone.didauthoidc.models.ServiceDecorator
 import com.capstone.didauthoidc.services.UrlShortenerService
 import com.capstone.didauthoidc.utils.OurJacksonObjectMapper
 import com.capstone.didauthoidc.utils.PresentationRequestUtils
@@ -31,35 +37,35 @@ class AuthorizeEndpoint {
     @RequestMapping(method = arrayOf(RequestMethod.POST))
     fun ProcessAsync(@RequestParam param: MultiValueMap<String, String>): String? {
 
-        val scopes : List<String> = param.getValue("scope")[0].toString().split(" ")
+        val scopes: List<String> = param.getValue("scope")[0].toString().split(" ")
 
         var check = 0
 
-        for (i in scopes){
-            if(i == "vc_authn")
+        for (i in scopes) {
+            if (i == "vc_authn")
                 check = 1
         }
-        if(check == 0){
+        if (check == 0) {
             return error("scopes doesn't contain vc_authn")
         }
 
-        var presentationRecordId : String = param.getValue("pres_req_conf_id").toString()
+        var presentationRecordId: String = param.getValue("pres_req_conf_id").toString()
 
-        var redirectUrl : String = param.getValue("redirect_uri").toString()
+        var redirectUrl: String = param.getValue("redirect_uri").toString()
 
-        var responseType : String
+        var responseType: String
 
         try {
             responseType = param.getValue("response_type").toString()
-        }catch (e: NoSuchElementException){
-            responseType =  IdentityConstants.DefaultResponseType
+        } catch (e: NoSuchElementException) {
+            responseType = IdentityConstants.DefaultResponseType
         }
 
-        var responseMode : String
+        var responseMode: String
 
         try {
             responseMode = param.getValue(IdentityConstants.ResponseModeUriParameterName).toString()
-        }catch (e: NoSuchElementException){
+        } catch (e: NoSuchElementException) {
             responseMode = IdentityConstants.DefaultResponseMode
         }
 
@@ -69,15 +75,16 @@ class AuthorizeEndpoint {
         // 도커에 acapy를 안띄웠을경우를 대비한 디버깅용 코드
 //        var acapyPublicDid = WalletPublicDid("Th7MpTaRZVRYnPiabds81Y", "FYmoFw55GeQH7SRFa37dkx1d2dZ3zUF8ckg7wmL7ofN4", true)
 
-        //PresentationConfiguration 객체를 원래 preq_conf_id를 파라미터로 줘서 파라미터와 매핑되는 객체를 디비에서 가지고 와야하지만 아직 DB설계가 완벽히 되지않았으므로 객체를 직접 생성한다.
-        var requested_attributes : MutableList<RequestedAttribute> = arrayListOf()
+        // PresentationConfiguration 객체를 원래 preq_conf_id를 파라미터로 줘서 파라미터와 매핑되는 객체를 디비에서 가지고 와야하지만 아직 DB설계가 완벽히 되지않았으므로 객체를 직접 생성한다.
+        var requested_attributes: MutableList<RequestedAttribute> = arrayListOf()
 
-        var attributeFilter1 : MutableList<AttributeFilter> = arrayListOf()
-        var attributeFilter2 : MutableList<AttributeFilter> = arrayListOf()
-        var attributeFilter3 : MutableList<AttributeFilter> = arrayListOf()
+        var attributeFilter1: MutableList<AttributeFilter> = arrayListOf()
+        var attributeFilter2: MutableList<AttributeFilter> = arrayListOf()
+        var attributeFilter3: MutableList<AttributeFilter> = arrayListOf()
 
         // attributefilter를 붙여서 제대로 동작하는지 확인하는 부분.
-        var attribute1  = AttributeFilter("unknown", "47xuakdhwjh29173", "DID", "1.0", "9592834sksjfhef17", "12819vfudhf27")
+        var attribute1 =
+            AttributeFilter("unknown", "47xuakdhwjh29173", "DID", "1.0", "9592834sksjfhef17", "12819vfudhf27")
 
         attributeFilter1.add(0, attribute1)
 
@@ -93,15 +100,18 @@ class AuthorizeEndpoint {
 
         var requestedPredicates1: MutableList<RequestedPredicate> = arrayListOf()
 
-        var presentationrequestconf = PresentationRequestConfiguration("Basic Proof", "1.0" ,requested_attributes,requestedPredicates1)
+        var presentationrequestconf =
+            PresentationRequestConfiguration("Basic Proof", "1.0", requested_attributes, requestedPredicates1)
 
-        var presentconf = PresentationConfiguration("test-request-config", "email", null,presentationrequestconf)
+        var presentconf = PresentationConfiguration("test-request-config", "email", null, presentationrequestconf)
 
-        //위에서 만든 PresentationConfiguration 클래스를 JsonString으로 변환하는 코드
-        var jsonStr = OurJacksonObjectMapper.getMapper().writerWithDefaultPrettyPrinter().writeValueAsString(presentconf)
+        // 위에서 만든 PresentationConfiguration 클래스를 JsonString으로 변환하는 코드
+        var jsonStr =
+            OurJacksonObjectMapper.getMapper().writerWithDefaultPrettyPrinter().writeValueAsString(presentconf)
 
-        //JsonString을 다시 PresentationConfiguration data class로 변환하는 코드이다. debug
-        var jsonStr2: PresentationConfiguration = OurJacksonObjectMapper.getMapper().readValue<PresentationConfiguration>(jsonStr)
+        // JsonString을 다시 PresentationConfiguration data class로 변환하는 코드이다. debug
+        var jsonStr2: PresentationConfiguration =
+            OurJacksonObjectMapper.getMapper().readValue<PresentationConfiguration>(jsonStr)
 
         // 다음은 PresentationRequestMessage 객체를 생성해야 한다.
         var presentationRequest: PresentationRequestMessage
@@ -147,7 +157,8 @@ class AuthorizeEndpoint {
         presentationRequestId = response.PresentationExchangeId
 
         // 다음으로 url과 shortUrl을 만들자.
-        val presentationRequestAsStringAsBase64 = Base64.getEncoder().encodeToString(OurJacksonObjectMapper.getMapper().writeValueAsString(presentationRequest).toByteArray())
+        val presentationRequestAsStringAsBase64 = Base64.getEncoder()
+            .encodeToString(OurJacksonObjectMapper.getMapper().writeValueAsString(presentationRequest).toByteArray())
         val url = "http://localhost:5000?m=$presentationRequestAsStringAsBase64"
         var shortUrl: String = urlShortenerService.createShortUrl(url)
 
@@ -160,7 +171,8 @@ class AuthorizeEndpoint {
     fun buildPresentationRequest(
         response: CreatePresentationResponse,
         acapyPublicDid: WalletPublicDid,
-        aca: ACAPYClient): PresentationRequestMessage {
+        aca: ACAPYClient
+    ): PresentationRequestMessage {
 
         var request = PresentationRequestMessage()
         request.id = response.ThreadId
