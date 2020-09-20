@@ -53,11 +53,11 @@ class AttributeFilterTest {
             "this_is_CredentialDefinitionId"
         )
 
-        assertEquals(attributeFilter.CredentialDefinitionId, attributeFilterAnswer.CredentialDefinitionId)
-        assertEquals(attributeFilter.IssuerDid, attributeFilterAnswer.IssuerDid)
-        assertEquals(attributeFilter.SchemaId, attributeFilterAnswer.SchemaId)
-        assertEquals(attributeFilter.SchemaIssuerDid, attributeFilterAnswer.SchemaIssuerDid)
-        assertEquals(attributeFilter.SchemaName, attributeFilterAnswer.SchemaName)
-        assertEquals(attributeFilter.SchemaVersion, attributeFilterAnswer.SchemaVersion)
+        assertEquals(attributeFilter.credentialDefinitionId, attributeFilterAnswer.credentialDefinitionId)
+        assertEquals(attributeFilter.issuerDid, attributeFilterAnswer.issuerDid)
+        assertEquals(attributeFilter.schemaId, attributeFilterAnswer.schemaId)
+        assertEquals(attributeFilter.schemaIssuerDid, attributeFilterAnswer.schemaIssuerDid)
+        assertEquals(attributeFilter.schemaName, attributeFilterAnswer.schemaName)
+        assertEquals(attributeFilter.schemaVersion, attributeFilterAnswer.schemaVersion)
     }
 }

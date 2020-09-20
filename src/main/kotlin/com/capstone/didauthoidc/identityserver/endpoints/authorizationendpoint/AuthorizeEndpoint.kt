@@ -1,6 +1,6 @@
 package com.capstone.didauthoidc.identityserver.endpoints.authorizationendpoint
 
-import com.capstone.didauthoidc.IdentityConstants
+import com.capstone.didauthoidc.identityserver.IdentityConstants
 import org.springframework.util.MultiValueMap
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestMethod
@@ -31,7 +31,7 @@ class AuthorizeEndpoint {
     val urlShortenerService = UrlShortenerService()
 
     @RequestMapping(method = arrayOf(RequestMethod.POST, RequestMethod.GET))
-    fun ProcessAsync(@RequestParam param: MultiValueMap<String, String>, model: Model): String {
+    fun processAsync(@RequestParam param: MultiValueMap<String, String>, model: Model): String {
 
         val scopes: List<String> = param.getValue("scope")[0].toString().split(" ")
 
@@ -66,7 +66,7 @@ class AuthorizeEndpoint {
         }
 
         var aca = ACAPYClient()
-//        var acapyPublicDid: WalletPublicDid = aca.WalletDidPublic()
+//        var acapyPublicDid: WalletPublicDid = aca.walletDidPublic()
 
         // 도커에 acapy를 안띄웠을경우를 대비한 디버깅용 코드
         var acapyPublicDid =
@@ -114,7 +114,7 @@ class AuthorizeEndpoint {
         // 방금 위에서 선언한 responseAsString을 역직렬화하여 변수 response에 저장한다.
         var response: CreatePresentationResponse = OurJacksonObjectMapper.getMapper().readValue(responseAsString)
         presentationRequest = buildPresentationRequest(response, acapyPublicDid, aca)
-        presentationRequestId = response.PresentationExchangeId
+        presentationRequestId = response.presentationExchangeId
 
         // 다음으로 url과 shortUrl을 만들자.
         val presentationRequestAsString = OurJacksonObjectMapper.getMapper().writeValueAsString(presentationRequest)
@@ -135,7 +135,7 @@ class AuthorizeEndpoint {
                 "http://localhost:5000/vc/connect/callback?pid=$presentationRequestId",
                 presentationRequestAsString
             )
-        ).ExecuteAsnc(model)
+        ).executeAsync(model)
     }
 
     // 이 메소드는 CreatePresentationResponse 객체로 부터 필요한 정보를 파싱해 PresentationRequestMessage 객체 형태로 만들어준다.
@@ -147,13 +147,13 @@ class AuthorizeEndpoint {
 
         var request = PresentationRequestMessage()
 
-        request.id = response.ThreadId
-        request.request = PresentationRequestUtils.generatePresentationAttachments(response.PresentationRequest)
+        request.id = response.threadId
+        request.request = PresentationRequestUtils.generatePresentationAttachments(response.presentationRequest)
 
         var service = ServiceDecorator()
 
-        service.recipientKeys.add(acapyPublicDid.Verkey)
-        service.serviceEndpoint = aca.GetAgentUrl()!!
+        service.recipientKeys.add(acapyPublicDid.verkey)
+        service.serviceEndpoint = aca.getAgentUrl()!!
 
         request.service = service
 

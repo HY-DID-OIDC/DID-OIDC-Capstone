@@ -14,9 +14,9 @@ class PresentationRequestUtils {
                 OurJacksonObjectMapper.getMapper().writeValueAsString(presentationRequest).toByteArray()
             )
             var attachment = PresentationAttachment()
-            attachment.Id = "libindy-request-presentation-0"
-            attachment.MimeType = "application/json"
-            attachment.Data["base64"] = base64Payload
+            attachment.id = "libindy-request-presentation-0"
+            attachment.mimeType = "application/json"
+            attachment.data["base64"] = base64Payload
 
             return mutableListOf(attachment)
         }

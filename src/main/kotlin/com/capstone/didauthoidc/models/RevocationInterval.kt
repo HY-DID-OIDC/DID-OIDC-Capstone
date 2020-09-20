@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonAutoDetect
 
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
 data class RevocationInterval(
-    var From: Long,
+    var from: Long,
 
-    var To: Long
+    var to: Long
 )
