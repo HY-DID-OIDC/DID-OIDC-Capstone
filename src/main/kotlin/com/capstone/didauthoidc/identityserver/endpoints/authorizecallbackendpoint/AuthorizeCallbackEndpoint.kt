@@ -2,14 +2,14 @@ package com.capstone.didauthoidc.identityserver.endpoints.authorizecallbackendpo
 
 import com.capstone.didauthoidc.identityserver.IdentityConstants
 import com.capstone.didauthoidc.models.AuthSession
-import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.util.MultiValueMap
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestMethod
 import org.springframework.web.bind.annotation.RequestParam
+import org.springframework.web.bind.annotation.RestController
 
-@Controller
+@RestController
 @RequestMapping("/vc/connect/callback")
 class AuthorizeCallbackEndpoint {
 
@@ -20,8 +20,9 @@ class AuthorizeCallbackEndpoint {
     @RequestMapping(method = arrayOf(RequestMethod.POST))
     fun processAsync(@RequestParam param: MultiValueMap<String, String>, model: Model): String {
         // 원래 코드는 이 코드이지만, 지금은 하드코딩 하겠다.
-//        val sessionId: String = param.getValue(IdentityConstants.ChallengeIdQueryParameterName).toString()
-        val sessionId: String = "a88d9a79-4b39-4075-9a35-d01d621dbf86"
+        val sessionId: String = param.getValue(IdentityConstants.ChallengeIdQueryParameterName).toString()
+//        val sessionId: String = "a88d9a79-4b39-4075-9a35-d01d621dbf86"
+//        println("[DEBUG] : sessionId = ${sessionId}")
         val presentationRecordId = "test-request-config"
         val presentationRequest = "{\n" +
             "    \"name\":\"Basic Proof\",\n" +
@@ -63,7 +64,6 @@ class AuthorizeCallbackEndpoint {
         // 원래는 Session DB에서 가져와야 하지만, 지금은 하드코딩 하겠다.
 //        var session: AuthSession? = sessionStorageService.FindByPresentationIdAsync(sessionId)
         var session: AuthSession = AuthSession(presentationRequestId = sessionId, presentationRecordId = presentationRecordId, presentationRequest = presentationRequest, requestParameters = requestParameters)
-
 
         if(session.requestParameters[IdentityConstants.ResponseTypeUriParameterName] == "code") {
             var url: String = "${session.requestParameters[IdentityConstants.RedirectUriParameterName]}?code=${session.id}"

@@ -1,7 +1,5 @@
 package com.capstone.didauthoidc.identityserver.endpoints.authorizecallbackendpoint
 
-import org.springframework.ui.Model
-
 class AuthorizeCallbackResult {
     private lateinit var url: String
 
