@@ -18,7 +18,7 @@ data class AuthSession(
     @Value("PresentationRequestId")
     var PresentationRequestId: String,
 
-    @Value("$true")
+    @Value("true")
     var PresentationRequestSatisfied: Boolean,
 
     @Value("PresentationRequest")
