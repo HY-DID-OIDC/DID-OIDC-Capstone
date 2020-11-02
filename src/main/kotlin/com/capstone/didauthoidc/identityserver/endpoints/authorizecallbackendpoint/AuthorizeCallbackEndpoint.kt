@@ -66,10 +66,10 @@ class AuthorizeCallbackEndpoint {
         var session: AuthSession = AuthSession(presentationRequestId = sessionId, presentationRecordId = presentationRecordId, presentationRequest = presentationRequest, requestParameters = requestParameters)
 
         // response_type이 code이면 url에 code를 파라미터로 붙여서 넘겨준다. state도 있다면 state도 url에 붙인다.
-        if(session.requestParameters[IdentityConstants.ResponseTypeUriParameterName] == "code") {
+        if (session.requestParameters[IdentityConstants.ResponseTypeUriParameterName] == "code") {
             var url: String = "${session.requestParameters[IdentityConstants.RedirectUriParameterName]}?code=${session.id}"
 
-            if(session.requestParameters.contains(IdentityConstants.StateParameterName))
+            if (session.requestParameters.contains(IdentityConstants.StateParameterName))
                 url += "&state=${session.requestParameters[IdentityConstants.StateParameterName]}"
 
             return AuthorizeCallbackResult().executeAsync(url)
