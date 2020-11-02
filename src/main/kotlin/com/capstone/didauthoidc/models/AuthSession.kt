@@ -1,18 +1,18 @@
 package com.capstone.didauthoidc.models
 
-import java.util.UUID
-import java.util.Date
-import kotlin.collections.LinkedHashMap
-import org.springframework.stereotype.Component
 import org.springframework.beans.factory.annotation.Value
+import org.springframework.stereotype.Component
+import java.util.UUID
+import kotlin.collections.LinkedHashMap
 
 @Component
-data class AuthSession (
+data class AuthSession(
+
     @Value("id")
     var id: String = UUID.randomUUID().toString(),
 
-    @Value("ExpiredTimestamp")
-    var expiredTimeStamp: Date? = null,
+    @Value("ExpiredTimestemp")
+    val expiredTimestamp: String? = null,
 
     @Value("PresentationRecordId")
     var presentationRecordId: String,
@@ -27,10 +27,12 @@ data class AuthSession (
     var presentationRequest: String,
 
     @Value("_requestParameters")
-    private var _requestParameters: String,
+    private var _requestParameters: String? = null,
 
-    var RequestParameters: Map<String, String> = LinkedHashMap(),
+    var requestParameters: Map<String, String> = LinkedHashMap(),
 
     @Value("_presentation")
-    var presentation: Presentation? = null
+    private var _presentation: String? = null,
+
+    var presentation: Map<String, String> = LinkedHashMap(),
 )

@@ -52,11 +52,11 @@ class AuthorizationEndpointResult {
 
     fun ExecuteAsync(model: Model): String {
 
-        model.addAttribute("presreq", _authorizationRequest.PresentationRequest)
-        model.addAttribute("Challenge", _authorizationRequest.Challenge)
-        model.addAttribute("Interval", _authorizationRequest.Interval)
-        model.addAttribute("PollUrl", _authorizationRequest.PollUrl)
-        model.addAttribute("ResolutionUrl", _authorizationRequest.ResolutionUrl)
+        model.addAttribute("presreq", _authorizationRequest.presentationRequest)
+        model.addAttribute("Challenge", _authorizationRequest.challenge)
+        model.addAttribute("Interval", _authorizationRequest.interval)
+        model.addAttribute("PollUrl", _authorizationRequest.pollUrl)
+        model.addAttribute("ResolutionUrl", _authorizationRequest.resolutionUrl)
 
         return "Authorize"
     }
