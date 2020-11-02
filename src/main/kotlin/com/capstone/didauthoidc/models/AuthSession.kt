@@ -1,32 +1,36 @@
 package com.capstone.didauthoidc.models
 
-import com.fasterxml.jackson.annotation.JsonProperty
 import java.util.UUID
 import java.util.Date
 import kotlin.collections.LinkedHashMap
+import org.springframework.stereotype.Component
+import org.springframework.beans.factory.annotation.Value
 
+@Component
 data class AuthSession (
-    @JsonProperty("Id")
+    @Value("id")
     var id: String = UUID.randomUUID().toString(),
 
-    @JsonProperty("ExpiredTimestamp")
+    @Value("ExpiredTimestamp")
     var expiredTimeStamp: Date? = null,
 
-    @JsonProperty("PresentationRecordId")
+    @Value("PresentationRecordId")
     var presentationRecordId: String,
 
-    @JsonProperty("PresentationRequestId")
+    @Value("PresentationRequestId")
     var presentationRequestId: String,
 
-    @JsonProperty("PresentationRequestSatisfied")
+    @Value("true")
     var presentationRequestSatisfied: Boolean = true,
 
-    @JsonProperty("PresentationRequest")
+    @Value("PresentationRequest")
     var presentationRequest: String,
 
-    @JsonProperty("RequestParameters")
-    var requestParameters: Map<String, String> = LinkedHashMap(),
+    @Value("_requestParameters")
+    private var _requestParameters: String,
 
-    @JsonProperty("Presentation")
+    var RequestParameters: Map<String, String> = LinkedHashMap(),
+
+    @Value("_presentation")
     var presentation: Presentation? = null
 )
