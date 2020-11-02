@@ -1,6 +1,6 @@
 package com.capstone.didauthoidc.identityserver.tokenendpoint
 
-import com.capstone.didauthoidc.IdentityConstants
+import com.capstone.didauthoidc.identityserver.IdentityConstants
 import com.capstone.didauthoidc.models.AuthSession
 import com.capstone.didauthoidc.services.PresentationConfigurationService
 import com.capstone.didauthoidc.services.TokenIssuerService
@@ -32,7 +32,7 @@ class TokenEndpointResult {
     fun ExcuteAsync(): JSONObject {
         println("Constructing token result")
 
-        var audience: String? = _session!!.RequestParameters.get(IdentityConstants.ClientId)
+        var audience: String? = _session!!.requestParameters.get(IdentityConstants.ClientId)
 
         val now = Date()
 
@@ -43,7 +43,7 @@ class TokenEndpointResult {
         val header = mapOf("alg" to "HS256", "typ" to "jwt")
 
         var jwt = Jwts.builder()
-            .claim(IdentityConstants.PresentationRequestConfigIDParamName, _session.PresentationRecordId)
+            .claim(IdentityConstants.PresentationRequestConfigIDParamName, _session.presentationRecordId)
             .claim(IdentityConstants.AuthenticationContextReferenceIdentityTokenKey, IdentityConstants.VCAuthnScopeName)
             .claim(IdentityConstants.OIDCTokenIssuedAt, now)
             .setIssuer("vc-authn-op")

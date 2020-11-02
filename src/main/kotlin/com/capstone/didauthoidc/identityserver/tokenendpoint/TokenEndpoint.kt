@@ -1,6 +1,6 @@
 package com.capstone.didauthoidc.identityserver.tokenendpoint
 
-import com.capstone.didauthoidc.IdentityConstants
+import com.capstone.didauthoidc.identityserver.IdentityConstants
 import com.capstone.didauthoidc.models.AuthSession
 import com.capstone.didauthoidc.services.PresentationConfigurationService
 import com.capstone.didauthoidc.services.SessionStorageService
