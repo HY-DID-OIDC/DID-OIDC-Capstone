@@ -50,9 +50,13 @@ class AuthorizationEndpointResult {
         this._authorizationRequest = authorizationRequest
     }
 
-    fun ExecuteAsnc(model: Model): String {
+    fun ExecuteAsync(model: Model): String {
 
         model.addAttribute("presreq", _authorizationRequest.PresentationRequest)
+        model.addAttribute("Challenge", _authorizationRequest.Challenge)
+        model.addAttribute("Interval", _authorizationRequest.Interval)
+        model.addAttribute("PollUrl", _authorizationRequest.PollUrl)
+        model.addAttribute("ResolutionUrl", _authorizationRequest.ResolutionUrl)
 
         return "Authorize"
     }

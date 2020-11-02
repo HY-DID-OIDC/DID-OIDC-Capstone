@@ -92,13 +92,13 @@
             "]"],
             el: "#app",
             data: {
-                qrUri: "@Model.Challenge",
+                qrUri: "${}",
                 qrWidth: 300,
                 btnUri: `didcomm://launch?d_m=${btoa(JSON.stringify(presReq))}`,
                 cardBodyClass: ['mx-auto', 'text-center'],
-                pollInterval: "@Model.Interval",
-                pollUrl: "@Model.PollUrl",
-                resolutionUrl: "@Model.ResolutionUrl"
+                pollInterval: "[[${Interval}]]",
+                pollUrl: [[${PollUrl}]],
+                resolutionUrl: [[${ResolutionUrl}]]
             },
             mounted: function () {
                 this.$nextTick(function () {

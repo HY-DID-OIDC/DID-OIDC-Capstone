@@ -135,7 +135,7 @@ class AuthorizeEndpoint {
                 "http://localhost:5000/vc/connect/callback?pid=$presentationRequestId",
                 presentationRequestAsString
             )
-        ).ExecuteAsnc(model)
+        ).ExecuteAsync(model)
     }
 
     // 이 메소드는 CreatePresentationResponse 객체로 부터 필요한 정보를 파싱해 PresentationRequestMessage 객체 형태로 만들어준다.
