@@ -4,11 +4,11 @@ import com.fasterxml.jackson.annotation.JsonProperty
 
 data class PresentationAttachment(
     @JsonProperty("@id")
-    var id: String = "",
+    var Id: String = "",
 
     @JsonProperty("mime-type")
-    var mimeType: String = "",
+    var MimeType: String = "",
 
     @JsonProperty("data")
-    var data: LinkedHashMap<String, String> = LinkedHashMap()
+    var Data: LinkedHashMap<String, String> = LinkedHashMap()
 )

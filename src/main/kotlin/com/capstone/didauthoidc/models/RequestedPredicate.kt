@@ -5,13 +5,13 @@ import com.fasterxml.jackson.annotation.JsonProperty
 
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
 data class RequestedPredicate(
-    var name: String,
+    var Name: String,
 
     var label: String,
 
-    var restrictions: MutableList<AttributeFilter>,
+    var Restrictions: MutableList<AttributeFilter>,
 
-    @JsonProperty("p_value") var pValue: String,
+    @JsonProperty("p_value") var PValue: String,
 
-    @JsonProperty("p_type") var pType: String
+    @JsonProperty("p_type") var PType: String
 )

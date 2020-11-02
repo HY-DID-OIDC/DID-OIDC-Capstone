@@ -1,19 +1,15 @@
 package com.capstone.didauthoidc.acapy
 
-class ACAPYConstants {
+data class ACAPYConstants(
+    val ApiKeyHeader: String = "x-api-key",
 
-    companion object {
+    val WalletDidPublicUri: String = "/wallet/did/public",
 
-        const val ApiKeyHeader: String = "x-api-key"
+    val PresentProofCreateRequest: String = "/present-proof/create-request",
 
-        const val WalletDidPublicUri: String = "/wallet/did/public"
+    val GetPresentationRecord: String = "/present-proof/records",
 
-        const val PresentProofCreateRequest: String = "/present-proof/create-request"
+    val VerifiedPresentationState: String = "verified",
 
-        const val GetPresentationRecord: String = "/present-proof/records"
-
-        const val VerifiedPresentationState: String = "verified"
-
-        const val PresentationsTopic: String = "present_proof"
-    }
-}
+    val PresentationsTopic: String = "present_proof"
+)

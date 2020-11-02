@@ -1,6 +1,6 @@
 package com.capstone.didauthoidc.identityserver.endpoints.authorizationendpoint
 
-import com.capstone.didauthoidc.identityserver.IdentityConstants
+import com.capstone.didauthoidc.IdentityConstants
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.ComponentScan
 import org.springframework.context.annotation.Configuration
@@ -10,15 +10,15 @@ import org.springframework.ui.Model
 @Configuration
 class AuthorizationViewModel {
 
-    var challenge: String = ""
+    var Challenge: String = ""
 
-    var pollUrl: String = ""
+    var PollUrl: String = ""
 
-    var resolutionUrl: String = ""
+    var ResolutionUrl: String = ""
 
-    var interval: Int = 0
+    var Interval: Int = 0
 
-    var presentationRequest: String? = ""
+    var PresentationRequest: String? = ""
 
     constructor(
         @Value("challenge") challenge: String,
@@ -26,15 +26,15 @@ class AuthorizationViewModel {
         @Value("resolutionUrl") resolutionUrl: String,
         @Value("presentationReqeust") presentationRequest: String
     ) {
-        this.challenge = challenge
+        this.Challenge = challenge
 
-        this.pollUrl = pollUrl
+        this.PollUrl = pollUrl
 
-        this.resolutionUrl = resolutionUrl
+        this.ResolutionUrl = resolutionUrl
 
-        this.interval = 2000
+        this.Interval = 2000
 
-        this.presentationRequest = presentationRequest
+        this.PresentationRequest = presentationRequest
     }
 }
 

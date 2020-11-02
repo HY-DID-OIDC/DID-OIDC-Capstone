@@ -14,11 +14,11 @@ import java.net.URL
 
 interface IACAPYClient {
 
-    fun walletPublicDid(): WalletPublicDid?
+    fun WalletDidPublic(): WalletPublicDid?
 
-    fun getAdminUrl(): String?
+    fun GetAdminUrl(): String?
 
-    fun getAgentUrl(): String?
+    fun GetAgentUrl(): String?
 }
 
 class ACAPYClient : IACAPYClient {
@@ -32,15 +32,15 @@ class ACAPYClient : IACAPYClient {
 
     private val _agentUrl: String = "http://192.168.65.3:5679"
 
-    override fun getAdminUrl(): String? {
+    override fun GetAdminUrl(): String? {
         return _adminUrl
     }
 
-    override fun getAgentUrl(): String? {
+    override fun GetAgentUrl(): String? {
         return _agentUrl
     }
 
-    override fun walletPublicDid(): WalletPublicDid {
+    override fun WalletDidPublic(): WalletPublicDid {
 
         val url = URL("http://localhost:5678/wallet/did/public")
 
@@ -64,10 +64,10 @@ class ACAPYClient : IACAPYClient {
 
         val json: String = content.toString()
         val mapper = OurJacksonObjectMapper.getMapper()
-        var publicDid: WalletDidPublicResponse = mapper.readValue(json)
+        var PublicDid: WalletDidPublicResponse = mapper.readValue<WalletDidPublicResponse>(json)
 
         `in`.close()
 
-        return publicDid.result
+        return PublicDid.Result
     }
 }

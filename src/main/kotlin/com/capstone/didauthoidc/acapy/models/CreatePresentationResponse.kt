@@ -5,11 +5,11 @@ import com.fasterxml.jackson.annotation.JsonProperty
 
 data class CreatePresentationResponse(
     @JsonProperty("thread_id")
-    var threadId: String,
+    var ThreadId: String,
 
     @JsonProperty("presentation_exchange_id")
-    var presentationExchangeId: String,
+    var PresentationExchangeId: String,
 
     @JsonProperty("presentation_request")
-    var presentationRequest: PresentationRequest
+    var PresentationRequest: PresentationRequest
 )

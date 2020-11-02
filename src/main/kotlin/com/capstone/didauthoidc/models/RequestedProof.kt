@@ -6,8 +6,8 @@ import com.fasterxml.jackson.databind.JsonNode
 
 data class RequestedProof(
     @JsonProperty("revealed_attrs")
-    var revealedAttributes: Map<String, ProofAttribute> = LinkedHashMap(),
+    var RevealedAttributes: Map<String, ProofAttribute> = LinkedHashMap(),
 
     @get:JsonAnyGetter
-    var rest: Map<String, JsonNode> = LinkedHashMap()
+    var Rest: Map<String, JsonNode> = LinkedHashMap()
 )
