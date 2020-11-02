@@ -23,6 +23,7 @@ dependencies {
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
+    implementation("junit:junit:4.12")
     developmentOnly("org.springframework.boot:spring-boot-devtools")
     runtimeOnly("com.h2database:h2")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-core:1.0.0-RC")
@@ -33,6 +34,10 @@ dependencies {
     implementation("org.thymeleaf.extras", "thymeleaf-extras-springsecurity4", "3.0.4.RELEASE")
     implementation("org.thymeleaf.extras", "thymeleaf-extras-java8time", "3.0.4.RELEASE")
     implementation("nz.net.ultraq.thymeleaf", "thymeleaf-layout-dialect", "2.4.1")
+    implementation("io.jsonwebtoken:jjwt-api:0.11.2")
+    implementation("io.jsonwebtoken:jjwt-impl:0.11.2")
+    implementation("io.jsonwebtoken:jjwt-jackson:0.11.2")
+    implementation("com.nimbusds:nimbus-jose-jwt:7.8")
 }
 
 tasks.withType<Test> {
