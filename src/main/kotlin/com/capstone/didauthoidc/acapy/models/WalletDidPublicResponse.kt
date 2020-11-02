@@ -4,16 +4,16 @@ import com.fasterxml.jackson.annotation.JsonProperty
 
 data class WalletDidPublicResponse(
     @JsonProperty("result")
-    val Result: WalletPublicDid
+    val result: WalletPublicDid
 )
 
 data class WalletPublicDid(
     @JsonProperty("did")
-    var DID: String,
+    var did: String,
 
     @JsonProperty("verkey")
-    var Verkey: String,
+    var verkey: String,
 
     @JsonProperty("public")
-    var Public: Boolean
+    var public: Boolean
 )

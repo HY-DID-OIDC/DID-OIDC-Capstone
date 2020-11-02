@@ -10,5 +10,5 @@ data class RequestedAttribute(
     var label: String?,
 
     @JsonProperty("restrictions")
-    var Restrictions: List<AttributeFilter>?
+    var restrictions: List<AttributeFilter>?
 )
