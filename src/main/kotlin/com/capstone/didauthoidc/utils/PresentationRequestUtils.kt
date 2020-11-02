@@ -28,7 +28,7 @@ class PresentationRequestUtils {
             var presentationRequest: PresentationRequest? = null
 
             for (attachment in presentationAttachments) {
-                if(attachment.id.equals("libindy-request-presentation-0")) {
+                if (attachment.id.equals("libindy-request-presentation-0")) {
                     presentationRequest = attachment.data["base64"]?.let {
                         OurJacksonObjectMapper.getMapper().readValue(
                             it
