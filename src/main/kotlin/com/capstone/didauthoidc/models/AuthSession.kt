@@ -1,36 +1,27 @@
 package com.capstone.didauthoidc.models
 
-import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
 
 @Component
 data class AuthSession(
 
-    @Value("id")
-    var Id: String,
+    var Id: String?,
 
-    @Value("ExpiredTimestemp")
-    val ExpiredTimestamp: String,
+    val ExpiredTimestamp: String?,
 
-    @Value("PresentationRecordId")
-    var PresentationRecordId: String,
+    var PresentationRecordId: String?,
 
-    @Value("PresentationRequestId")
-    var PresentationRequestId: String,
+    var PresentationRequestId: String?,
 
-    @Value("true")
-    var PresentationRequestSatisfied: Boolean,
+    var PresentationRequestSatisfied: Boolean?,
 
-    @Value("PresentationRequest")
-    var PresentationRequest: String,
+    var PresentationRequest: String?,
 
-    @Value("_requestParameters")
-    private var _requestParameters: String,
+    private var _requestParameters: String?,
 
     var RequestParameters: Map<String, String> = LinkedHashMap(),
 
-    @Value("_presentation")
-    private var _presentation: String,
+    private var _presentation: String?,
 
     var Presentation: Map<String, String> = LinkedHashMap(),
 )
