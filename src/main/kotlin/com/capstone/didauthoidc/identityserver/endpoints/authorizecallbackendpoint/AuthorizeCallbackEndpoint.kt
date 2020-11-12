@@ -70,7 +70,7 @@ class AuthorizeCallbackEndpoint {
                 url += "&state=${session.requestParameters[IdentityConstants.StateParameterName]}"
 
             // url을 다 만들었으므로, 이 url로 redirect 시킨다.
-            return "redirect:${url}"
+            return "redirect:$url"
         }
         return "[ERROR] : Unknown response type"
     }
