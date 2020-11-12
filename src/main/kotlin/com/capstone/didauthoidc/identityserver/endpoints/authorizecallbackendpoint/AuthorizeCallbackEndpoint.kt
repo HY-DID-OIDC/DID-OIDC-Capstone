@@ -2,27 +2,24 @@ package com.capstone.didauthoidc.identityserver.endpoints.authorizecallbackendpo
 
 import com.capstone.didauthoidc.identityserver.IdentityConstants
 import com.capstone.didauthoidc.models.AuthSession
+import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.util.MultiValueMap
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestMethod
 import org.springframework.web.bind.annotation.RequestParam
-import org.springframework.web.bind.annotation.RestController
 
-@RestController
-@RequestMapping("/vc/connect/callback")
+@Controller
 class AuthorizeCallbackEndpoint {
 
     companion object {
         const val Name = "VCAuthorizeCallback"
     }
 
-    @RequestMapping(method = arrayOf(RequestMethod.POST))
+    @RequestMapping("/vc/connect/callback", method = arrayOf(RequestMethod.POST))
     fun processAsync(@RequestParam param: MultiValueMap<String, String>, model: Model): String {
         // 원래 코드는 이 코드이지만, 지금은 하드코딩 하겠다.
         val sessionId: String = param.getValue(IdentityConstants.ChallengeIdQueryParameterName).toString()
-//        val sessionId: String = "a88d9a79-4b39-4075-9a35-d01d621dbf86"
-//        println("[DEBUG] : sessionId = ${sessionId}")
         val presentationRecordId = "test-request-config"
         val presentationRequest = "{\n" +
             "    \"name\":\"Basic Proof\",\n" +
@@ -54,10 +51,10 @@ class AuthorizeCallbackEndpoint {
             "}"
         var requestParameters: MutableMap<String, String> = LinkedHashMap()
         requestParameters["scope"] = "openid vc_authn"
-        requestParameters["state"] = "EI3kI8RFbpuIqZE_MEI0xsv18NjQOS1lkbrBtj3x2CE.wOX0F5IZd74.security-admin-console"
+        requestParameters["state"] = "qIgqnlLoWZxaMlEJmmX8KRFAHgZ72eGJ"
         requestParameters["response_type"] = "code"
         requestParameters["client_id"] = "keycloak"
-        requestParameters["redirect_uri"] = "http://localhost:8180/auth/realms/vc-authn/broker/vc-authn/endpoint"
+        requestParameters["redirect_uri"] = "http://localhost:8080/oidc/auth/cb/"
         requestParameters["nonce"] = "eEJ7joxB5CC8j_LaOaw3Dg"
         requestParameters["pres_req_conf_id"] = "test-request-config"
 
@@ -72,8 +69,9 @@ class AuthorizeCallbackEndpoint {
             if (session.requestParameters.contains(IdentityConstants.StateParameterName))
                 url += "&state=${session.requestParameters[IdentityConstants.StateParameterName]}"
 
-            return AuthorizeCallbackResult().executeAsync(url)
+            // url을 다 만들었으므로, 이 url로 redirect 시킨다.
+            return "redirect:${url}"
         }
-        return "[ERROR] : This string can't be reached"
+        return "[ERROR] : Unknown response type"
     }
 }
