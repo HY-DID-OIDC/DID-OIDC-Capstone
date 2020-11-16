@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.databind.JsonNode
 
 data class ProofAttribute(
-    @JsonProperty("raw") var Raw: String,
+    @JsonProperty("raw") var raw: String,
 
-    @get:JsonAnyGetter var Rest: Map<String, JsonNode> = LinkedHashMap()
+    @get:JsonAnyGetter var rest: Map<String, JsonNode> = LinkedHashMap()
 )

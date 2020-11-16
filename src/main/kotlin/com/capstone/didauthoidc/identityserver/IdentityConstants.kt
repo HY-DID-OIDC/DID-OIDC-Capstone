@@ -1,4 +1,4 @@
-package com.capstone.didauthoidc
+package com.capstone.didauthoidc.identityserver
 
 class IdentityConstants {
 
@@ -15,14 +15,14 @@ class IdentityConstants {
         const val VCAuthnScopeName: String = "vc_authn"
 
         val MissingVCAuthnScopeError: String =
-            "missing ${com.capstone.didauthoidc.IdentityConstants.Companion.VCAuthnScopeName} scope"
+            "missing $VCAuthnScopeName scope"
 
         const val PresentationRequestConfigIDParamName: String = "pres_req_conf_id"
 
         const val InvalidPresentationRequestConfigIDError: String = "invalid_pres_req_conf_id"
 
         val InvalidPresentationRequestConfigIDDesc: String =
-            "Missing ${com.capstone.didauthoidc.IdentityConstants.Companion.PresentationRequestConfigIDParamName} param"
+            "Missing $PresentationRequestConfigIDParamName param"
 
         const val RedirectUriParameterName: String = "redirect_uri"
 

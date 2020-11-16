@@ -1,27 +1,29 @@
 package com.capstone.didauthoidc.models
 
 import org.springframework.stereotype.Component
+import java.util.UUID
+import kotlin.collections.LinkedHashMap
 
 @Component
 data class AuthSession(
 
-    var Id: String?,
+    var id: String = UUID.randomUUID().toString(),
 
-    val ExpiredTimestamp: String?,
+    val expiredTimestamp: String? = null,
 
-    var PresentationRecordId: String?,
+    var presentationRecordId: String?,
 
-    var PresentationRequestId: String?,
+    var presentationRequestId: String?,
 
-    var PresentationRequestSatisfied: Boolean?,
+    var presentationRequestSatisfied: Boolean = true,
 
-    var PresentationRequest: String?,
+    var presentationRequest: String?,
 
-    private var _requestParameters: String?,
+    private var _requestParameters: String? = null,
 
-    var RequestParameters: Map<String, String> = LinkedHashMap(),
+    var requestParameters: Map<String, String> = LinkedHashMap(),
 
-    private var _presentation: String?,
+    private var _presentation: String? = null,
 
-    var Presentation: Map<String, String> = LinkedHashMap(),
+    var presentation: Map<String, String> = LinkedHashMap(),
 )

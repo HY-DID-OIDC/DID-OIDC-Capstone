@@ -1,6 +1,6 @@
 package com.capstone.didauthoidc.identityserver.endpoints.authorizationendpoint
 
-import com.capstone.didauthoidc.IdentityConstants
+import com.capstone.didauthoidc.identityserver.IdentityConstants
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.ComponentScan
 import org.springframework.context.annotation.Configuration
@@ -10,15 +10,15 @@ import org.springframework.ui.Model
 @Configuration
 class AuthorizationViewModel {
 
-    var Challenge: String = ""
+    var challenge: String = ""
 
-    var PollUrl: String = ""
+    var pollUrl: String = ""
 
-    var ResolutionUrl: String = ""
+    var resolutionUrl: String = ""
 
-    var Interval: Int = 0
+    var interval: Int = 0
 
-    var PresentationRequest: String? = ""
+    var presentationRequest: String? = ""
 
     constructor(
         @Value("challenge") challenge: String,
@@ -26,15 +26,15 @@ class AuthorizationViewModel {
         @Value("resolutionUrl") resolutionUrl: String,
         @Value("presentationReqeust") presentationRequest: String
     ) {
-        this.Challenge = challenge
+        this.challenge = challenge
 
-        this.PollUrl = pollUrl
+        this.pollUrl = pollUrl
 
-        this.ResolutionUrl = resolutionUrl
+        this.resolutionUrl = resolutionUrl
 
-        this.Interval = 2000
+        this.interval = 2000
 
-        this.PresentationRequest = presentationRequest
+        this.presentationRequest = presentationRequest
     }
 }
 
@@ -52,11 +52,11 @@ class AuthorizationEndpointResult {
 
     fun ExecuteAsync(model: Model): String {
 
-        model.addAttribute("presreq", _authorizationRequest.PresentationRequest)
-        model.addAttribute("Challenge", _authorizationRequest.Challenge)
-        model.addAttribute("Interval", _authorizationRequest.Interval)
-        model.addAttribute("PollUrl", _authorizationRequest.PollUrl)
-        model.addAttribute("ResolutionUrl", _authorizationRequest.ResolutionUrl)
+        model.addAttribute("presreq", _authorizationRequest.presentationRequest)
+        model.addAttribute("Challenge", _authorizationRequest.challenge)
+        model.addAttribute("Interval", _authorizationRequest.interval)
+        model.addAttribute("PollUrl", _authorizationRequest.pollUrl)
+        model.addAttribute("ResolutionUrl", _authorizationRequest.resolutionUrl)
 
         return "Authorize"
     }

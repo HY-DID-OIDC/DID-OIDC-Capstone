@@ -8,20 +8,20 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder
 @JsonPropertyOrder("SchemaId", "SchemaIssuerDid", "SchemaName", "SchemaVersion", "IssuerDid", "CredentialDefinitionId")
 data class AttributeFilter(
     @JsonProperty("schema_id")
-    var SchemaId: String?,
+    var schemaId: String?,
 
     @JsonProperty("schema_issuer_did")
-    var SchemaIssuerDid: String?,
+    var schemaIssuerDid: String?,
 
     @JsonProperty("schema_name")
-    var SchemaName: String?,
+    var schemaName: String?,
 
     @JsonProperty("schema_version")
-    var SchemaVersion: String?,
+    var schemaVersion: String?,
 
     @JsonProperty("issuer_did")
-    var IssuerDid: String?,
+    var issuerDid: String?,
 
     @JsonProperty("cred_def_id")
-    var CredentialDefinitionId: String?
+    var credentialDefinitionId: String?
 )
