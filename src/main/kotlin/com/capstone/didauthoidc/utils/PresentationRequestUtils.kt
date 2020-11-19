@@ -6,7 +6,7 @@ import com.capstone.didauthoidc.models.PresentationRequestConfiguration
 import com.capstone.didauthoidc.models.PresentationRequest_v_1_0
 import com.fasterxml.jackson.annotation.JsonInclude
 import com.fasterxml.jackson.module.kotlin.readValue
-import java.util.*
+import java.util.UUID
 
 class PresentationRequestUtils {
     companion object {
@@ -47,13 +47,12 @@ class PresentationRequestUtils {
             var presentationRequest_1_0 = PresentationRequest_v_1_0(configuration.name, configuration.version)
 
             for (reqAttribute in configuration.requestedAttributes) {
-                var referent = if (!reqAttribute.label.isNullOrEmpty()) {reqAttribute.label} else {UUID.randomUUID().toString()}
+                var referent = if (!reqAttribute.label.isNullOrEmpty()) { reqAttribute.label } else { UUID.randomUUID().toString() }
                 reqAttribute.label = null
 
                 if (!presentationRequest_1_0.requestedAttributes.containsKey(referent)) {
                     presentationRequest_1_0.requestedAttributes.put(referent!!, reqAttribute)
-                }
-                else {
+                } else {
                     presentationRequest_1_0.requestedAttributes.put(disambiguateReferent(referent!!), reqAttribute)
                 }
             }
