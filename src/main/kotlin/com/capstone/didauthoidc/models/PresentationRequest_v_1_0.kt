@@ -5,9 +5,9 @@ data class PresentationRequest_v_1_0(
 
     var version: String,
 
-    var nonRevoked: RevocationInterval,
+    var nonRevoked: RevocationInterval? = null,
 
-    var requestedAttributes: Map<String, RequestedAttribute> = LinkedHashMap(),
+    var requestedAttributes: MutableMap<String, RequestedAttribute> = mutableMapOf(),
 
-    var requestedPredicates: Map<String, RequestedPredicate> = LinkedHashMap()
+    var requestedPredicates: MutableMap<String, RequestedPredicate> = mutableMapOf()
 )
