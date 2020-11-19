@@ -7,6 +7,7 @@ import com.capstone.didauthoidc.models.PresentationRequest_v_1_0
 import com.fasterxml.jackson.annotation.JsonInclude
 import com.fasterxml.jackson.module.kotlin.readValue
 import java.util.UUID
+import java.util.Base64
 
 class PresentationRequestUtils {
     companion object {
