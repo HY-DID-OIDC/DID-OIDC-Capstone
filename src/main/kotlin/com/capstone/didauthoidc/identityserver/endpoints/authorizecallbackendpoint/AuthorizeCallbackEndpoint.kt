@@ -1,7 +1,12 @@
 package com.capstone.didauthoidc.identityserver.endpoints.authorizecallbackendpoint
 
 import com.capstone.didauthoidc.identityserver.IdentityConstants
+import com.capstone.didauthoidc.models.AttributeFilter
 import com.capstone.didauthoidc.models.AuthSession
+import com.capstone.didauthoidc.models.PresentationRequestConfiguration
+import com.capstone.didauthoidc.models.RequestedAttribute
+import com.capstone.didauthoidc.utils.OurJacksonObjectMapper
+import com.capstone.didauthoidc.utils.PresentationRequestUtils
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.util.MultiValueMap
@@ -18,6 +23,19 @@ class AuthorizeCallbackEndpoint {
 
     @RequestMapping("/vc/connect/callback", method = arrayOf(RequestMethod.POST))
     fun processAsync(@RequestParam param: MultiValueMap<String, String>, model: Model): String {
+
+        val attributeFilter: AttributeFilter = AttributeFilter(schemaName = "verified-email", issuerDid = "MTYqmTBoLT7KLP5RNfgK3b")
+        val requestedAttribute: RequestedAttribute = RequestedAttribute(name = "email")
+        requestedAttribute.restrictions?.add(attributeFilter)
+        val presentationRequestConfiguration = PresentationRequestConfiguration("verified-email", "1.0")
+        presentationRequestConfiguration.requestedAttributes.add(requestedAttribute)
+
+        val configuration: String = OurJacksonObjectMapper.getMapper().writeValueAsString(presentationRequestConfiguration)
+        println("[DEBUG] : $configuration")
+
+        val jsonRequestBody: String = PresentationRequestUtils.generatePresentationRequest(presentationRequestConfiguration)
+        println("[DEBUG] : $jsonRequestBody")
+
         // 원래 코드는 이 코드이지만, 지금은 하드코딩 하겠다.
         val sessionId: String = param.getValue(IdentityConstants.ChallengeIdQueryParameterName).toString()
         val presentationRecordId = "test-request-config"

@@ -60,9 +60,7 @@ class PresentationRequestUtils {
 
             val requestBody = linkedMapOf("proof_request" to presentationRequest_1_0)
 
-            OurJacksonObjectMapper.getMapper().setSerializationInclusion(JsonInclude.Include.NON_NULL)
-            val returnResult = OurJacksonObjectMapper.getMapper().writeValueAsString(requestBody)
-            OurJacksonObjectMapper.getMapper().setSerializationInclusion(JsonInclude.Include.ALWAYS)
+            val returnResult = OurJacksonObjectMapper.getMapper().setSerializationInclusion(JsonInclude.Include.NON_NULL).writeValueAsString(requestBody)
 
             return returnResult
         }
