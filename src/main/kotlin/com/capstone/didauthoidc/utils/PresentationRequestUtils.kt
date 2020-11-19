@@ -2,6 +2,9 @@ package com.capstone.didauthoidc.utils
 
 import com.capstone.didauthoidc.models.PresentationAttachment
 import com.capstone.didauthoidc.models.PresentationRequest
+import com.capstone.didauthoidc.models.PresentationRequestConfiguration
+import com.capstone.didauthoidc.models.PresentationRequest_v_1_0
+import com.fasterxml.jackson.annotation.JsonInclude
 import com.fasterxml.jackson.module.kotlin.readValue
 import java.util.Base64
 
@@ -38,6 +41,20 @@ class PresentationRequestUtils {
             }
 
             return presentationRequest!!
+        }
+
+        fun generatePresentationRequest(configuration: PresentationRequestConfiguration): String {
+            var presentationRequest_1_0: PresentationRequest_v_1_0 = PresentationRequest_v_1_0(configuration.name, configuration.version)
+
+            
+
+            val requestBody = linkedMapOf<String, PresentationRequest_v_1_0>("proof_request" to presentationRequest_1_0)
+
+            OurJacksonObjectMapper.getMapper().setSerializationInclusion(JsonInclude.Include.NON_NULL)
+            val returnResult = OurJacksonObjectMapper.getMapper().writeValueAsString(requestBody)
+            OurJacksonObjectMapper.getMapper().setSerializationInclusion(JsonInclude.Include.ALWAYS)
+
+            return returnResult
         }
     }
 }
