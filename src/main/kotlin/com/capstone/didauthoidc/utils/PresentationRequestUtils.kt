@@ -47,14 +47,14 @@ class PresentationRequestUtils {
         fun generatePresentationRequest(configuration: PresentationRequestConfiguration): String {
             var presentationRequest_1_0 = PresentationRequest_v_1_0(configuration.name, configuration.version)
 
-            for (reqAttribute in configuration.requestedAttributes) {
+            for (reqAttribute in configuration.RequestedAttributes) {
                 var referent = if (!reqAttribute.label.isNullOrEmpty()) { reqAttribute.label } else { UUID.randomUUID().toString() }
                 reqAttribute.label = null
 
-                if (!presentationRequest_1_0.requestedAttributes.containsKey(referent)) {
-                    presentationRequest_1_0.requestedAttributes.put(referent!!, reqAttribute)
+                if (!presentationRequest_1_0.RequestedAttributes.containsKey(referent)) {
+                    presentationRequest_1_0.RequestedAttributes.put(referent!!, reqAttribute)
                 } else {
-                    presentationRequest_1_0.requestedAttributes.put(disambiguateReferent(referent!!), reqAttribute)
+                    presentationRequest_1_0.RequestedAttributes.put(disambiguateReferent(referent!!), reqAttribute)
                 }
             }
 

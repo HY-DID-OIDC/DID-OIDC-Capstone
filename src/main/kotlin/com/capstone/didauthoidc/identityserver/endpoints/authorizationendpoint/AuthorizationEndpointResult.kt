@@ -52,6 +52,10 @@ class AuthorizationEndpointResult {
 
     fun ExecuteAsync(model: Model): String {
 
+        val temp = _authorizationRequest.challenge.split("//")[1]
+        val delimeter = "[\"[[\" , \"]]\"]"
+
+        model.addAttribute("delimeter", delimeter)
         model.addAttribute("presreq", _authorizationRequest.presentationRequest)
         model.addAttribute("Challenge", _authorizationRequest.challenge)
         model.addAttribute("Interval", _authorizationRequest.interval)

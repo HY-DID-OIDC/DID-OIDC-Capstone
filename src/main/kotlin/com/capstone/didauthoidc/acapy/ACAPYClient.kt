@@ -1,12 +1,18 @@
 package com.capstone.didauthoidc.acapy
 
+import com.capstone.didauthoidc.acapy.models.CreatePresentationResponse
 import com.capstone.didauthoidc.acapy.models.WalletDidPublicResponse
 import com.capstone.didauthoidc.acapy.models.WalletPublicDid
+import com.capstone.didauthoidc.models.PresentationRequestConfiguration
 import com.capstone.didauthoidc.utils.OurJacksonObjectMapper
+import com.capstone.didauthoidc.utils.PresentationRequestUtils.Companion.generatePresentationRequest
 import com.fasterxml.jackson.module.kotlin.readValue
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import org.springframework.http.MediaType
 import org.springframework.stereotype.Controller
+import org.springframework.web.reactive.function.BodyInserters
+import org.springframework.web.reactive.function.client.WebClient
 import java.io.BufferedReader
 import java.io.InputStreamReader
 import java.net.HttpURLConnection
@@ -19,6 +25,8 @@ interface IACAPYClient {
     fun getAdminUrl(): String?
 
     fun getAgentUrl(): String?
+
+    fun CreatePresentationRequestAsync(configuration: PresentationRequestConfiguration): CreatePresentationResponse
 }
 
 class ACAPYClient : IACAPYClient {
@@ -30,7 +38,7 @@ class ACAPYClient : IACAPYClient {
 
     private val _adminUrlApiKey: String = ""
 
-    private val _agentUrl: String = "http://192.168.65.3:5679"
+    private val _agentUrl: String = "http://localhost:5679"
 
     override fun getAdminUrl(): String? {
         return _adminUrl
@@ -69,5 +77,21 @@ class ACAPYClient : IACAPYClient {
         `in`.close()
 
         return publicDid.result
+    }
+
+    override fun CreatePresentationRequestAsync(configuration: PresentationRequestConfiguration): CreatePresentationResponse {
+
+        var jsonRequestBody = generatePresentationRequest(configuration)
+
+        val response = WebClient
+            .create("${_adminUrl}${ACAPYConstants.PresentProofCreateRequest}")
+            .post()
+            .contentType(MediaType.APPLICATION_JSON)
+            .body(BodyInserters.fromObject(jsonRequestBody))
+            .retrieve()
+            .bodyToMono(CreatePresentationResponse::class.java)
+            .block()!!
+
+        return response
     }
 }

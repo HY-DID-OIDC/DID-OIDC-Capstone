@@ -1,22 +1,28 @@
 package com.capstone.didauthoidc.identityserver.endpoints.authorizationendpoint
 
-import com.capstone.didauthoidc.identityserver.IdentityConstants
-import org.springframework.util.MultiValueMap
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RequestMethod
-import org.springframework.web.bind.annotation.RequestParam
 import com.capstone.didauthoidc.acapy.ACAPYClient
 import com.capstone.didauthoidc.acapy.models.CreatePresentationResponse
 import com.capstone.didauthoidc.acapy.models.WalletPublicDid
+import com.capstone.didauthoidc.identityserver.IdentityConstants
+import com.capstone.didauthoidc.models.RequestedAttribute
+import com.capstone.didauthoidc.models.AttributeFilter
 import com.capstone.didauthoidc.models.PresentationRequestMessage
+import com.capstone.didauthoidc.models.PresentationRequestConfiguration
+import com.capstone.didauthoidc.models.PresentationConfiguration
 import com.capstone.didauthoidc.models.ServiceDecorator
 import com.capstone.didauthoidc.services.UrlShortenerService
 import com.capstone.didauthoidc.utils.OurJacksonObjectMapper
 import com.capstone.didauthoidc.utils.PresentationRequestUtils
-import com.fasterxml.jackson.module.kotlin.readValue
+import com.fasterxml.jackson.annotation.JsonAutoDetect
+import com.fasterxml.jackson.databind.ObjectMapper
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
+import org.springframework.util.MultiValueMap
+import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RequestMethod
+import org.springframework.web.bind.annotation.RequestParam
 import java.util.Base64
+import javax.servlet.http.HttpServletRequest
 import kotlin.NoSuchElementException
 
 @Controller
@@ -31,7 +37,7 @@ class AuthorizeEndpoint {
     val urlShortenerService = UrlShortenerService()
 
     @RequestMapping(method = arrayOf(RequestMethod.POST, RequestMethod.GET))
-    fun processAsync(@RequestParam param: MultiValueMap<String, String>, model: Model): String {
+    fun processAsync(@RequestParam param: MultiValueMap<String, String>, model: Model, req: HttpServletRequest): String {
 
         val scopes: List<String> = param.getValue("scope")[0].toString().split(" ")
 
@@ -72,58 +78,83 @@ class AuthorizeEndpoint {
         var acapyPublicDid =
             WalletPublicDid("Th7MpTaRZVRYnPiabds81Y", "FYmoFw55GeQH7SRFa37dkx1d2dZ3zUF8ckg7wmL7ofN4", true)
 
+        val mapper = ObjectMapper()
+        mapper.visibilityChecker = mapper.serializationConfig.defaultVisibilityChecker
+            .withFieldVisibility(JsonAutoDetect.Visibility.ANY)
+            .withGetterVisibility(JsonAutoDetect.Visibility.NONE)
+            .withSetterVisibility(JsonAutoDetect.Visibility.NONE)
+            .withCreatorVisibility(JsonAutoDetect.Visibility.NONE)
+
+        val presentationRecordAsString = "{\n" +
+            "    \"id\":\"test-request-config\",\n" +
+            "    \"subject_identifier\":\"email\",\n" +
+            "    \"configuration\":{\n" +
+            "        \"name\":\"Basic Proof\",\n" +
+            "        \"version\":\"1.0\",\n" +
+            "        \"requested_attributes\":[\n" +
+            "            {\n" +
+            "                \"name\":\"email\",\n" +
+            "                \"names\":null,\n" +
+            "                \"label\":null,\n" +
+            "                \"restrictions\":[\n" +
+            "                ]\n" +
+            "            },\n" +
+            "            {\n" +
+            "                \"name\":\"first_name\",\n" +
+            "                \"names\":null,\n" +
+            "                \"label\":null,\n" +
+            "                \"restrictions\":[\n" +
+            "                ]\n" +
+            "            },\n" +
+            "            {\n" +
+            "                \"name\":\"last_name\",\n" +
+            "                \"names\":null,\n" +
+            "                \"label\":null,\n" +
+            "                \"restrictions\":[\n" +
+            "                ]\n" +
+            "            }\n" +
+            "        ],\n" +
+            "        \"requested_predicates\":[\n" +
+            "        ]\n" +
+            "    }\n" +
+            "}"
+        val attributeFilter = AttributeFilter(issuerDid = "MTYqmTBoLT7KLP5RNfgK3b", schemaName = "verified-email")
+
+        val requestedAttribute1 = RequestedAttribute("email")
+        requestedAttribute1.restrictions?.add(attributeFilter)
+
+        val presentationRequestConfiguration = PresentationRequestConfiguration("verified-email", "1.0")
+        presentationRequestConfiguration.RequestedAttributes.add(requestedAttribute1)
+
+        val presentationConfiguration = PresentationConfiguration("test-request-config", "email", null, presentationRequestConfiguration)
+
         // 다음은 PresentationRequestMessage 객체를 생성해야 한다.
         var presentationRequest: PresentationRequestMessage
         var presentationRequestId: String
 
         // 이 부분이 acapy와 통신하여 response를 받아오는 부분이다. 우선 하드코딩으로 채워넣자.
-//        var response = _acapyClient.createPresentationRequestAsync(presentationRecord.configuration)
-        var responseAsString: String = "{\n" +
-            "    \"thread_id\":\"6ae21fe7-f3e0-4ffe-98a8-a971056ac662\",\n" +
-            "    \"presentation_exchange_id\":\"a88d9a79-4b39-4075-9a35-d01d621dbf86\",\n" +
-            "    \"presentation_request\":{\n" +
-            "        \"name\":\"Basic Proof\",\n" +
-            "        \"version\":\"1.0\",\n" +
-            "        \"nonce\":\"36274825438457821717167\",\n" +
-            "        \"requested_attributes\":{\n" +
-            "            \"f0e6544d-0efd-4b9a-9906-8a9255b00968\":{\n" +
-            "                \"name\":\"email\",\n" +
-            "                \"restrictions\":[\n" +
-            "                    \n" +
-            "                ]\n" +
-            "            },\n" +
-            "            \"b0b29f57-d2d5-4b6e-b3f7-6a7e1322f653\":{\n" +
-            "                \"name\":\"first_name\",\n" +
-            "                \"restrictions\":[\n" +
-            "                    \n" +
-            "                ]\n" +
-            "            },\n" +
-            "            \"b5db4150-2eeb-4ba0-8f87-fae0e3de5486\":{\n" +
-            "                \"name\":\"last_name\",\n" +
-            "                \"restrictions\":[\n" +
-            "                    \n" +
-            "                ]\n" +
-            "            }\n" +
-            "        },\n" +
-            "        \"requested_predicates\":{\n" +
-            "            \n" +
-            "        }\n" +
-            "    }\n" +
-            "}"
+        var response = aca.CreatePresentationRequestAsync(presentationRequestConfiguration)
 
         // 방금 위에서 선언한 responseAsString을 역직렬화하여 변수 response에 저장한다.
-        var response: CreatePresentationResponse = OurJacksonObjectMapper.getMapper().readValue(responseAsString)
+
         presentationRequest = buildPresentationRequest(response, acapyPublicDid, aca)
-        presentationRequestId = response.presentationExchangeId
+        presentationRequestId = response.presentationExchangeId!!
 
         // 다음으로 url과 shortUrl을 만들자.
         val presentationRequestAsString = OurJacksonObjectMapper.getMapper().writeValueAsString(presentationRequest)
 
+        println(presentationRequestAsString)
+
         val presentationRequestAsStringAsBase64 = Base64.getEncoder()
             .encodeToString(presentationRequestAsString.toByteArray())
 
-        val url = "http://localhost:5000?m=$presentationRequestAsStringAsBase64"
-        var shortUrl: String = urlShortenerService.createShortUrl(url)
+        val url = "${req.requestURL}" + "?m=$presentationRequestAsStringAsBase64"
+        val modified_url = url.split("/vc")[0].split("//")
+        val header_url = "https://"
+        val body_url = modified_url[1]
+        val final_url = header_url + body_url
+
+        var shortUrl: String = urlShortenerService.createShortUrl(final_url)
 
         // TODO : 다음은 AuthSession 데이터 클래스를 이용해 세션을 DB에 저장해야 한다. but 지금은 세션처리를 안하겠다.
 
@@ -131,8 +162,8 @@ class AuthorizeEndpoint {
         return AuthorizationEndpointResult(
             AuthorizationViewModel(
                 shortUrl,
-                "http://localhost:5000/vc/connect/poll?pid=$presentationRequestId",
-                "http://localhost:5000/vc/connect/callback?pid=$presentationRequestId",
+                "$final_url/vc/connect/poll?pid=$presentationRequestId",
+                "$final_url/vc/connect/callback?pid=$presentationRequestId",
                 presentationRequestAsString
             )
         ).ExecuteAsync(model)
@@ -147,13 +178,15 @@ class AuthorizeEndpoint {
 
         var request = PresentationRequestMessage()
 
-        request.id = response.threadId
-        request.request = PresentationRequestUtils.generatePresentationAttachments(response.presentationRequest)
+        request.id = response.threadId!!
+        request.request = PresentationRequestUtils.generatePresentationAttachments(response.presentationRequest!!)
 
         var service = ServiceDecorator()
 
         service.recipientKeys.add(acapyPublicDid.verkey)
-        service.serviceEndpoint = aca.getAgentUrl()!!
+        service.serviceEndpoint = "https://45a4ab35c70c.ngrok.io"
+        service.routingKeys = null
+        request.comment = null
 
         request.service = service
 
