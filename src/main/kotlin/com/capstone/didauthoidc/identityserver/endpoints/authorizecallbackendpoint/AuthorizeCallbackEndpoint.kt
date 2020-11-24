@@ -21,7 +21,7 @@ class AuthorizeCallbackEndpoint {
         const val Name = "VCAuthorizeCallback"
     }
 
-    @RequestMapping("/vc/connect/callback", method = arrayOf(RequestMethod.POST))
+    @RequestMapping("vc/connect/callback", method = arrayOf(RequestMethod.POST))
     fun processAsync(@RequestParam param: MultiValueMap<String, String>, model: Model): String {
 
         // generatePresentationRequest 임시 테스트 코드 시작

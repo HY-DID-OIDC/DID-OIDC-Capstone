@@ -38,7 +38,7 @@ class TokenEndpoint {
         const val Name = "VCToken"
     }
 
-    @PostMapping("/vc/connect/token")
+    @PostMapping("vc/connect/token")
     fun ProcessAsync(@RequestParam param: MultiValueMap<String, String>): JSONObject {
         var grantType = param.get(IdentityConstants.GrantTypeParameterName)
 

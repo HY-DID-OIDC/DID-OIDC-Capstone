@@ -1,5 +1,6 @@
 package com.capstone.didauthoidc.identityserver.endpoints.authorizationendpoint
 
+import com.capstone.didauthoidc.UrlConstant
 import com.capstone.didauthoidc.acapy.ACAPYClient
 import com.capstone.didauthoidc.acapy.models.CreatePresentationResponse
 import com.capstone.didauthoidc.acapy.models.WalletPublicDid
@@ -26,7 +27,7 @@ import javax.servlet.http.HttpServletRequest
 import kotlin.NoSuchElementException
 
 @Controller
-@RequestMapping("/vc/connect/authorize")
+@RequestMapping("vc/connect/authorize")
 class AuthorizeEndpoint {
 
     companion object {
@@ -148,6 +149,8 @@ class AuthorizeEndpoint {
         val presentationRequestAsStringAsBase64 = Base64.getEncoder()
             .encodeToString(presentationRequestAsString.toByteArray())
 
+        UrlConstant.longUrl = presentationRequestAsStringAsBase64
+
         val url = "${req.requestURL}" + "?m=$presentationRequestAsStringAsBase64"
         val modified_url = url.split("/vc")[0].split("//")
         val header_url = "https://"
@@ -184,7 +187,7 @@ class AuthorizeEndpoint {
         var service = ServiceDecorator()
 
         service.recipientKeys.add(acapyPublicDid.verkey)
-        service.serviceEndpoint = "https://45a4ab35c70c.ngrok.io"
+        service.serviceEndpoint = "https://786183edc814.ngrok.io"
         service.routingKeys = null
         request.comment = null
 
