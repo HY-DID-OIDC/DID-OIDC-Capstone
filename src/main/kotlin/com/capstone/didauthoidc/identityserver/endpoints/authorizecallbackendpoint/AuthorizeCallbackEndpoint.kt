@@ -27,10 +27,12 @@ class AuthorizeCallbackEndpoint {
         // generatePresentationRequest 임시 테스트 코드 시작
         val attributeFilter =
             AttributeFilter(schemaName = "verified-email", issuerDid = "MTYqmTBoLT7KLP5RNfgK3b")
+
         val requestedAttribute = RequestedAttribute(name = "email")
         requestedAttribute.restrictions?.add(attributeFilter)
+
         val presentationRequestConfiguration = PresentationRequestConfiguration("verified-email", "1.0")
-        presentationRequestConfiguration.requestedAttributes.add(requestedAttribute)
+        presentationRequestConfiguration.RequestedAttributes.add(requestedAttribute)
 
         val configuration: String =
             OurJacksonObjectMapper.getMapper().writeValueAsString(presentationRequestConfiguration)

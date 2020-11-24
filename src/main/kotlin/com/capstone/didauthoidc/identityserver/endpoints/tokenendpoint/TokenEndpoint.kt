@@ -1,4 +1,4 @@
-package com.capstone.didauthoidc.identityserver.tokenendpoint
+package com.capstone.didauthoidc.identityserver.endpoints.tokenendpoint
 
 import com.capstone.didauthoidc.identityserver.IdentityConstants
 import com.capstone.didauthoidc.models.AuthSession

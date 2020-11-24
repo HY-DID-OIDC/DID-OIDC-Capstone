@@ -9,8 +9,8 @@ data class PresentationConfiguration(
     @JsonProperty("subject_identifier")
     var subjectIdentifier: String,
 
-    var _configuration: String?,
+    var _configuration: String? = null,
 
     @JsonProperty("configuration")
-    var configuration: PresentationRequestConfiguration?
+    var configuration: PresentationRequestConfiguration
 )

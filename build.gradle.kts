@@ -3,6 +3,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 plugins {
     id("org.springframework.boot") version "2.3.2.RELEASE"
     id("io.spring.dependency-management") version "1.0.9.RELEASE"
+    id("com.google.cloud.tools.jib") version "2.6.0"
     kotlin("plugin.spring") version "1.3.72"
     kotlin("plugin.jpa") version "1.3.72"
     kotlin("jvm") version "1.4.0"
@@ -38,6 +39,8 @@ dependencies {
     implementation("io.jsonwebtoken:jjwt-impl:0.11.2")
     implementation("io.jsonwebtoken:jjwt-jackson:0.11.2")
     implementation("com.nimbusds:nimbus-jose-jwt:7.8")
+    implementation("org.springframework.boot:spring-boot-starter-webflux")
+    implementation("org.projectreactor:reactor-spring:1.0.1.RELEASE")
 }
 
 tasks.withType<Test> {

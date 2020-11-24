@@ -1,6 +1,7 @@
 package com.capstone.didauthoidc.utils
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect
+import com.fasterxml.jackson.annotation.JsonInclude
 import com.fasterxml.jackson.annotation.PropertyAccessor
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
@@ -20,7 +21,7 @@ class OurJacksonObjectMapper private constructor() {
                 mapper = jacksonObjectMapper()
                 mapper!!.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.NONE)
                 mapper!!.setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY)
-
+                mapper!!.setSerializationInclusion(JsonInclude.Include.ALWAYS)
                 return mapper as ObjectMapper
             }
         }
