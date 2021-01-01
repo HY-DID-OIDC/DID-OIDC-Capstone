@@ -1,5 +1,7 @@
 package com.capstone.didauthoidc.identityserver.endpoints.authorizationendpoint
 
+import com.capstone.didauthoidc.Authsession_constant
+import com.capstone.didauthoidc.UrlConstant
 import com.capstone.didauthoidc.acapy.ACAPYClient
 import com.capstone.didauthoidc.acapy.models.CreatePresentationResponse
 import com.capstone.didauthoidc.acapy.models.WalletPublicDid
@@ -22,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestMethod
 import org.springframework.web.bind.annotation.RequestParam
 import java.util.Base64
+import java.util.UUID
 import javax.servlet.http.HttpServletRequest
 import kotlin.NoSuchElementException
 
@@ -39,6 +42,8 @@ class AuthorizeEndpoint {
     @RequestMapping(method = arrayOf(RequestMethod.POST, RequestMethod.GET))
     fun processAsync(@RequestParam param: MultiValueMap<String, String>, model: Model, req: HttpServletRequest): String {
 
+        Authsession_constant.issued_at = "https://${req.requestURL.toString().split("/vc")[0].split("//")[1]}"
+
         val scopes: List<String> = param.getValue("scope")[0].toString().split(" ")
 
         var isVcauthnInScope = 0
@@ -52,6 +57,11 @@ class AuthorizeEndpoint {
         }
 
         var presentationRecordId: String = param.getValue("pres_req_conf_id").toString()
+        Authsession_constant.presentationRecordId = presentationRecordId
+
+        var nonce: String = param.getValue("nonce").toString().split("[")[1].split("]")[0]
+
+        Authsession_constant.nonce = nonce
 
         var redirectUrl: String = param.getValue("redirect_uri").toString()
 
@@ -72,11 +82,8 @@ class AuthorizeEndpoint {
         }
 
         var aca = ACAPYClient()
-//        var acapyPublicDid: WalletPublicDid = aca.walletDidPublic()
 
-        // 도커에 acapy를 안띄웠을경우를 대비한 디버깅용 코드
-        var acapyPublicDid =
-            WalletPublicDid("Th7MpTaRZVRYnPiabds81Y", "FYmoFw55GeQH7SRFa37dkx1d2dZ3zUF8ckg7wmL7ofN4", true)
+        var acapyPublicDid: WalletPublicDid = aca.walletPublicDid()
 
         val mapper = ObjectMapper()
         mapper.visibilityChecker = mapper.serializationConfig.defaultVisibilityChecker
@@ -85,39 +92,6 @@ class AuthorizeEndpoint {
             .withSetterVisibility(JsonAutoDetect.Visibility.NONE)
             .withCreatorVisibility(JsonAutoDetect.Visibility.NONE)
 
-        val presentationRecordAsString = "{\n" +
-            "    \"id\":\"test-request-config\",\n" +
-            "    \"subject_identifier\":\"email\",\n" +
-            "    \"configuration\":{\n" +
-            "        \"name\":\"Basic Proof\",\n" +
-            "        \"version\":\"1.0\",\n" +
-            "        \"requested_attributes\":[\n" +
-            "            {\n" +
-            "                \"name\":\"email\",\n" +
-            "                \"names\":null,\n" +
-            "                \"label\":null,\n" +
-            "                \"restrictions\":[\n" +
-            "                ]\n" +
-            "            },\n" +
-            "            {\n" +
-            "                \"name\":\"first_name\",\n" +
-            "                \"names\":null,\n" +
-            "                \"label\":null,\n" +
-            "                \"restrictions\":[\n" +
-            "                ]\n" +
-            "            },\n" +
-            "            {\n" +
-            "                \"name\":\"last_name\",\n" +
-            "                \"names\":null,\n" +
-            "                \"label\":null,\n" +
-            "                \"restrictions\":[\n" +
-            "                ]\n" +
-            "            }\n" +
-            "        ],\n" +
-            "        \"requested_predicates\":[\n" +
-            "        ]\n" +
-            "    }\n" +
-            "}"
         val attributeFilter = AttributeFilter(issuerDid = "MTYqmTBoLT7KLP5RNfgK3b", schemaName = "verified-email")
 
         val requestedAttribute1 = RequestedAttribute("email")
@@ -143,15 +117,21 @@ class AuthorizeEndpoint {
         // 다음으로 url과 shortUrl을 만들자.
         val presentationRequestAsString = OurJacksonObjectMapper.getMapper().writeValueAsString(presentationRequest)
 
-        println(presentationRequestAsString)
-
         val presentationRequestAsStringAsBase64 = Base64.getEncoder()
             .encodeToString(presentationRequestAsString.toByteArray())
 
         val url = "${req.requestURL}" + "?m=$presentationRequestAsStringAsBase64"
+
+        UrlConstant.longUrl = url
+        Authsession_constant.session_Id = UUID.randomUUID().toString()
+        Authsession_constant.state = param.getValue("state")[0].toString()
+
         val modified_url = url.split("/vc")[0].split("//")
+
         val header_url = "https://"
+
         val body_url = modified_url[1]
+
         val final_url = header_url + body_url
 
         var shortUrl: String = urlShortenerService.createShortUrl(final_url)
@@ -162,8 +142,8 @@ class AuthorizeEndpoint {
         return AuthorizationEndpointResult(
             AuthorizationViewModel(
                 shortUrl,
-                "$final_url/vc/connect/poll?pid=$presentationRequestId",
-                "$final_url/vc/connect/callback?pid=$presentationRequestId",
+                "https://$body_url/vc/connect/poll?pid=$presentationRequestId",
+                "https://$body_url/vc/connect/callback?pid=$presentationRequestId",
                 presentationRequestAsString
             )
         ).ExecuteAsync(model)
@@ -177,19 +157,17 @@ class AuthorizeEndpoint {
     ): PresentationRequestMessage {
 
         var request = PresentationRequestMessage()
-
         request.id = response.threadId!!
         request.request = PresentationRequestUtils.generatePresentationAttachments(response.presentationRequest!!)
 
         var service = ServiceDecorator()
 
         service.recipientKeys.add(acapyPublicDid.verkey)
-        service.serviceEndpoint = "https://45a4ab35c70c.ngrok.io"
+        service.serviceEndpoint = "https://d07b4f43cbf0.ngrok.io"
         service.routingKeys = null
         request.comment = null
 
         request.service = service
-
         return request
     }
 }
