@@ -56,8 +56,6 @@ class ACAPYClient : IACAPYClient {
 
         con.requestMethod = "GET"
 
-        val status = con.responseCode
-
         val `in` = BufferedReader(
             InputStreamReader(con.inputStream)
         )
@@ -71,7 +69,9 @@ class ACAPYClient : IACAPYClient {
         }
 
         val json: String = content.toString()
+
         val mapper = OurJacksonObjectMapper.getMapper()
+
         var publicDid: WalletDidPublicResponse = mapper.readValue(json)
 
         `in`.close()

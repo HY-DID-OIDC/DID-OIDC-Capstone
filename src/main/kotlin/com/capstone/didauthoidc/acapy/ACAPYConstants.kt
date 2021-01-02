@@ -12,7 +12,7 @@ class ACAPYConstants {
 
         const val GetPresentationRecord: String = "/present-proof/records"
 
-        const val VerifiedPresentationState: String = "verified"
+        const val SuccessfulPresentationUpdate: String = "presentation_received"
 
         const val PresentationsTopic: String = "present_proof"
     }

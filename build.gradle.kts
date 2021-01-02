@@ -25,6 +25,7 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
     implementation("junit:junit:4.12")
+    implementation("org.springframework.boot:spring-boot-starter-security")
     developmentOnly("org.springframework.boot:spring-boot-devtools")
     runtimeOnly("com.h2database:h2")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-core:1.0.0-RC")
@@ -41,6 +42,8 @@ dependencies {
     implementation("com.nimbusds:nimbus-jose-jwt:7.8")
     implementation("org.springframework.boot:spring-boot-starter-webflux")
     implementation("org.projectreactor:reactor-spring:1.0.1.RELEASE")
+    implementation("com.auth0:java-jwt:3.12.0")
+    implementation("com.google.code.gson:gson:2.8.6")
 }
 
 tasks.withType<Test> {
