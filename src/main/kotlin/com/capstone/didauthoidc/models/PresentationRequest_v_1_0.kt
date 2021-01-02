@@ -1,5 +1,9 @@
 package com.capstone.didauthoidc.models
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect
+import com.fasterxml.jackson.annotation.JsonProperty
+
+@JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
 data class PresentationRequest_v_1_0(
     var name: String,
 
@@ -7,7 +11,10 @@ data class PresentationRequest_v_1_0(
 
     var nonRevoked: RevocationInterval? = null,
 
-    var requestedAttributes: MutableMap<String, RequestedAttribute> = mutableMapOf(),
+    @JsonProperty("requested_attributes")
+    var RequestedAttributes: MutableMap<String, RequestedAttribute> = mutableMapOf(),
 
-    var requestedPredicates: MutableMap<String, RequestedPredicate> = mutableMapOf()
+    @JsonProperty("requested_predicates")
+    var RequestedPredicates: MutableMap<String, RequestedPredicate> = mutableMapOf()
+
 )

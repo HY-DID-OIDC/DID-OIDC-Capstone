@@ -1,4 +1,4 @@
-package com.capstone.didauthoidc.identityserver.tokenendpoint
+package com.capstone.didauthoidc.identityserver.endpoints.tokenendpoint
 
 import com.capstone.didauthoidc.identityserver.IdentityConstants
 import com.capstone.didauthoidc.models.AuthSession
@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 import java.time.LocalDateTime
+import javax.servlet.http.HttpServletRequest
 
 @RestController
 @ComponentScan(basePackages = arrayOf("com.capstone.didauthoidc.identityserver.models"))
@@ -39,7 +40,8 @@ class TokenEndpoint {
     }
 
     @PostMapping("/vc/connect/token")
-    fun ProcessAsync(@RequestParam param: MultiValueMap<String, String>): JSONObject {
+    fun ProcessAsync(@RequestParam param: MultiValueMap<String, String>, req: HttpServletRequest): JSONObject {
+
         var grantType = param.get(IdentityConstants.GrantTypeParameterName)
 
         if (grantType == null) {

@@ -1,6 +1,5 @@
 package com.capstone.didauthoidc.identityserver.endpoints.authorizationendpoint
 
-import com.capstone.didauthoidc.identityserver.IdentityConstants
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.ComponentScan
 import org.springframework.context.annotation.Configuration
@@ -44,14 +43,15 @@ class AuthorizationEndpointResult {
 
     var _authorizationRequest: AuthorizationViewModel
 
-    var _viewName: String = IdentityConstants.AuthorizationViewName
-
     constructor(authorizationRequest: AuthorizationViewModel) {
         this._authorizationRequest = authorizationRequest
     }
 
     fun ExecuteAsync(model: Model): String {
 
+        val delimeter = "[\"[[\" , \"]]\"]"
+
+        model.addAttribute("delimeter", delimeter)
         model.addAttribute("presreq", _authorizationRequest.presentationRequest)
         model.addAttribute("Challenge", _authorizationRequest.challenge)
         model.addAttribute("Interval", _authorizationRequest.interval)
