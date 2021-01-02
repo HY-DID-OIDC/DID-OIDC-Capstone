@@ -82,22 +82,23 @@
     </div>
 
     <script type="text/javascript" th:inline="javascript">
-        /*<![CDATA[*/
-        const presReq = [(${presreq})]
+        const presReq = [[${presreq}]];
         var app = new Vue({
             components: {
                 QrcodeVue,
             },
-            delimiters: [(${delimeter})],
+            delimiters: ["[" +
+            "[", "]" +
+            "]"],
             el: "#app",
             data: {
-                qrUri: "[(${Challenge})]",
+                qrUri: "${}",
                 qrWidth: 300,
                 btnUri: `didcomm://launch?d_m=${btoa(JSON.stringify(presReq))}`,
                 cardBodyClass: ['mx-auto', 'text-center'],
-                pollInterval: "[(${Interval})]",
-                pollUrl: "[(${PollUrl})]",
-                resolutionUrl: "[(${ResolutionUrl})]"
+                pollInterval: "[[${Interval}]]",
+                pollUrl: [[${PollUrl}]],
+                resolutionUrl: [[${ResolutionUrl}]]
             },
             mounted: function () {
                 this.$nextTick(function () {
@@ -125,7 +126,6 @@
                 }
             },
         });
-        /*]]>*/
     </script>
 </div>
 </body>

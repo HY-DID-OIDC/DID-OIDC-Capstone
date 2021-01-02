@@ -1,6 +1,5 @@
 package com.capstone.didauthoidc.identityserver.endpoints.authorizecallbackendpoint
 
-import com.capstone.didauthoidc.Authsession_constant
 import com.capstone.didauthoidc.identityserver.IdentityConstants
 import com.capstone.didauthoidc.models.AttributeFilter
 import com.capstone.didauthoidc.models.AuthSession
@@ -22,7 +21,7 @@ class AuthorizeCallbackEndpoint {
         const val Name = "VCAuthorizeCallback"
     }
 
-    @RequestMapping("/vc/connect/callback", method = arrayOf(RequestMethod.GET))
+    @RequestMapping("/vc/connect/callback", method = arrayOf(RequestMethod.POST))
     fun processAsync(@RequestParam param: MultiValueMap<String, String>, model: Model): String {
 
         // generatePresentationRequest 임시 테스트 코드 시작
@@ -37,11 +36,12 @@ class AuthorizeCallbackEndpoint {
 
         val configuration: String =
             OurJacksonObjectMapper.getMapper().writeValueAsString(presentationRequestConfiguration)
+        println("[DEBUG] : $configuration")
 
         // 위에서 만든 presentationRequestConfiguration을 파라미터로 전달하며 generatePresentationRequest를 호출한다.
         val jsonRequestBody: String =
             PresentationRequestUtils.generatePresentationRequest(presentationRequestConfiguration)
-
+        println("[DEBUG] : $jsonRequestBody")
         // generatePresentationRequest 임시 테스트 코드 끝
 
         // 원본 코드 시작
@@ -76,7 +76,6 @@ class AuthorizeCallbackEndpoint {
             "        \n" +
             "    }\n" +
             "}"
-
         var requestParameters: MutableMap<String, String> = LinkedHashMap()
         requestParameters["scope"] = "openid vc_authn"
         requestParameters["state"] = "qIgqnlLoWZxaMlEJmmX8KRFAHgZ72eGJ"
@@ -98,11 +97,11 @@ class AuthorizeCallbackEndpoint {
         // response_type이 code이면 url에 code를 파라미터로 붙여서 넘겨준다. state도 있다면 state도 url에 붙인다.
         if (session.requestParameters[IdentityConstants.ResponseTypeUriParameterName] == "code") {
             var url: String =
-                "${session.requestParameters[IdentityConstants.RedirectUriParameterName]}?code=${Authsession_constant.session_Id}"
+                "${session.requestParameters[IdentityConstants.RedirectUriParameterName]}?code=${session.id}"
 
             if (session.requestParameters.contains(IdentityConstants.StateParameterName))
-                url += "&state=${Authsession_constant.state}"
-            Authsession_constant.redirect_url = url
+                url += "&state=${session.requestParameters[IdentityConstants.StateParameterName]}"
+
             // url을 다 만들었으므로, 이 url로 redirect 시킨다.
             return "redirect:$url"
         }
