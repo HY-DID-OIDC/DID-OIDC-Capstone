@@ -6,6 +6,8 @@ import com.capstone.didauthoidc.acapy.models.WalletPublicDid
 import com.capstone.didauthoidc.models.PresentationRequestConfiguration
 import com.capstone.didauthoidc.utils.OurJacksonObjectMapper
 import com.capstone.didauthoidc.utils.PresentationRequestUtils.Companion.generatePresentationRequest
+import com.fasterxml.jackson.databind.JsonNode
+import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -93,5 +95,34 @@ class ACAPYClient : IACAPYClient {
             .block()!!
 
         return response
+    }
+    fun GetAcapyUrl(did: String): String {
+        val url = URL("http://localhost:5678/wallet/get-did-endpoint?did=$did")
+
+        val con = url.openConnection() as HttpURLConnection
+
+        con.requestMethod = "GET"
+
+        val `in` = BufferedReader(
+            InputStreamReader(con.inputStream)
+        )
+
+        var inputLine: String?
+
+        val content = StringBuffer()
+
+        while (`in`.readLine().also { inputLine = it } != null) {
+            content.append(inputLine)
+        }
+
+        `in`.close()
+
+        val mapper = ObjectMapper()
+
+        val node: JsonNode = mapper.readTree(content.toString())
+
+        val acapy_url = node.path("endpoint").asText()
+
+        return acapy_url
     }
 }
