@@ -85,6 +85,8 @@ class AuthorizeEndpoint {
 
         var acapyPublicDid: WalletPublicDid = aca.walletPublicDid()
 
+        Authsession_constant.acapy_url = aca.GetAcapyUrl(acapyPublicDid.did)
+
         val mapper = ObjectMapper()
         mapper.visibilityChecker = mapper.serializationConfig.defaultVisibilityChecker
             .withFieldVisibility(JsonAutoDetect.Visibility.ANY)
@@ -161,9 +163,8 @@ class AuthorizeEndpoint {
         request.request = PresentationRequestUtils.generatePresentationAttachments(response.presentationRequest!!)
 
         var service = ServiceDecorator()
-
         service.recipientKeys.add(acapyPublicDid.verkey)
-        service.serviceEndpoint = "https://d07b4f43cbf0.ngrok.io"
+        service.serviceEndpoint = "${Authsession_constant.acapy_url}"
         service.routingKeys = null
         request.comment = null
 

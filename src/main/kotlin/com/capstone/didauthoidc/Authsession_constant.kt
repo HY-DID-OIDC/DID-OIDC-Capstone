@@ -21,5 +21,7 @@ class Authsession_constant {
         var redirect_url: String = "null"
 
         val keys: JSONObject = JSONObject()
+
+        var acapy_url: String = "null"
     }
 }

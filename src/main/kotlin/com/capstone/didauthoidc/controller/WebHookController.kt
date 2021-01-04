@@ -36,7 +36,7 @@ class WebHookController {
 
     fun processWebHook(apiKey: String?, topic: String, update: String): ResponseEntity<Any> {
 
-        val mapper: ObjectMapper = ObjectMapper()
+        val mapper = ObjectMapper()
 
         val node: JsonNode = mapper.readTree(update)
 
@@ -49,7 +49,7 @@ class WebHookController {
 
             Authsession_constant.vc_arrived = true
 
-            val email = update.split("\"raw\": ")[1].split(",")[0].split("\"")[1]
+            val email = node.findPath("raw").asText()
 
             /* VC에서 파싱한 이메일을 세션 디비에 담아 놓는다. */
             Authsession_constant.email = email
